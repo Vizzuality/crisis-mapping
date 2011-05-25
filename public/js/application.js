@@ -12,6 +12,7 @@ $(function(){
 
   var Twitter = Backbone.Model.extend({
     defaults: {
+      current_user: null,
       login: null
     },
     setup: function() {
@@ -28,14 +29,15 @@ $(function(){
       });
     },
     success: function(e, user) {
-      this.login = user;
-      console.log(this.login);
+      this.current_user = T.currentUser;
+      this.login = this.currentUser.data('screen_name');
       alert("Welcome " + this.login);
 
     },
     error: function() {
     },
     signout: function(e) {
+      e.preventDefault();
       alert("Bye bye, " + this.login);
       twttr.anywhere.signOut();
     }
