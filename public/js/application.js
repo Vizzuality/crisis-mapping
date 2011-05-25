@@ -15,6 +15,7 @@ $(function(){
       var me = this;
 
       $.ajax({url:"is_already_authorized", success:function(data) {
+        console.log("is authorized? : ", data);
         if (data == "ok") {
           $(".login").fadeOut("slow");
           $(".signout").fadeIn("slow");
