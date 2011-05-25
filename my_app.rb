@@ -26,10 +26,11 @@ get '/' do
   erb :index
 end
 
-get '/authorize/:user_id' do
+get '/authorize' do
   cookie = request.cookies["twitter_anywhere_identity"]
-  user_id = params[:user_id]
-  {:digest => Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET), :cookie => cookie}
+  cookie.to_yaml
+  #user_id = params[:user_id]
+  #{:digest => Digest::SHA1.hexdigest(cookie[:user_id] + options.CONSUMER_SECRET), :cookie => cookie}
 end
 
 post '/polygon/create' do
