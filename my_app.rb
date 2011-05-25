@@ -27,12 +27,15 @@ get '/' do
 end
 
 get '/authorize' do
-  cookie = request.cookies["twitter_anywhere_identity"]
-  user_id = cookie.split(":").first
-  {:digest => Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET), :cookie => cookie}
+  cookie = request.cookies["twitter_anywhere_identity"].split(":")
+  user_id = cookie.first
+  session[:authorized] = Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == cookie[2]
+  session[:authorized] == true ? "ok" : "nok"
 end
 
 post '/polygon/create' do
+  return unless session[:authorized]
+
   if coordinates = params[:coordinates]
     @cartodb = options.connection
     @cartodb.query("INSERT INTO #{options.table_name} (the_geom) VALUES (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))")
