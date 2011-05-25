@@ -32,7 +32,8 @@ $(function(){
       });
     },
     success: function(e, user) {
-      this.login = this.currentUser.data('screen_name');
+      console.log(e, user);
+      this.login = this.current_user.data('screen_name');
       alert("Welcome " + this.login);
     },
     error: function() {
