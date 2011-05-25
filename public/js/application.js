@@ -26,6 +26,7 @@ $(function(){
     },
     success: function(e, user) {
       this.login = user;
+      console.log(this.user);
       alert("Welcome " + this.login);
 
     },
