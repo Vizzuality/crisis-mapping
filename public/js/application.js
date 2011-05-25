@@ -17,9 +17,14 @@ $(function(){
     setup: function() {
       var me = this;
       twttr.anywhere(function (T) {
+
         T("#login").connectButton({
           authComplete: function(e, user) { me.success(e, user); },
           singOut: function() { me.singout; }
+        });
+
+        $("#signout").bind("click", function () {
+          twttr.anywhere.signOut();
         });
 
       });
@@ -35,6 +40,7 @@ $(function(){
     },
     signout: function(e) {
 
+      alert("Bye bye, " + this.login);
 
     }
   });
