@@ -19,9 +19,9 @@ $(function(){
           authComplete: function(e, user) {
             me.current_user = T.currentUser;
             me.screen_name = me.current_user.data('screen_name');
-            $.ajax(url: "authorize/"+me.screen_name, success:function(data) {
+            $.ajax({url:"authorize/"+me.screen_name, success:function(data) {
               console.log(data);
-            });
+            }});
           },
           signOut: function() {
             // Complete with after_signout
