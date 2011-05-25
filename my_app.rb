@@ -14,6 +14,7 @@ CartoDB::Settings   = YAML.load_file("#{File.dirname(__FILE__)}/config/cartodb_c
 CartoDB::Connection = CartoDB::Client::Connection.new unless defined? CartoDB::Connection
 
 configure do
+  enable :sessions
   set :TITLE, "Crisis Mapping"
   set :table_name, CartoDB::Settings["table_name"]
   set :connection, CartoDB::Connection
