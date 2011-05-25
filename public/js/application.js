@@ -17,12 +17,14 @@ $(function(){
     setup: function() {
       var me = this;
       twttr.anywhere(function (T) {
-
         T("#login").connectButton({
-          authComplete: function(e, user) { me.success(e, user); }
+          authComplete: function(e, user) { me.success(e, user); },
+          signOut: function() {
+          }
+
         });
 
-        $("#signout").bind("click", function() { me.signout; });
+        $("#signout").bind("click", function() { me.signout(); });
       });
     },
     success: function(e, user) {
@@ -32,7 +34,6 @@ $(function(){
 
     },
     error: function() {
-
     },
     signout: function(e) {
       alert("Bye bye, " + this.login);
