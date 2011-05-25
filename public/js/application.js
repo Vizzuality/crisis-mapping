@@ -32,7 +32,7 @@ $(function(){
     error: function() {
 
     },
-    signout: function() {
+    signout: function(e) {
 
 
     }
@@ -113,6 +113,7 @@ $(function(){
 
 	var App = Backbone.Controller.extend({
 		appData: null,
+		twitter:null,
 
 	    routes: {
 	        "":       "index",
@@ -122,9 +123,9 @@ $(function(){
 
 		initialize: function() {
 			this.appData = new AppData();
-			//
+			this.twitter = new Twitter();
+
 			MapView.setup({model: this.appData});
-			//
 			return this;
 		},
 
@@ -132,6 +133,7 @@ $(function(){
 
 			// display the current location
 			this.appData.set({"centered": true});
+			this.twitter.setup();
 		},
 		gotoDraw: function() {
 
