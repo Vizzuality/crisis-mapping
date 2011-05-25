@@ -19,19 +19,15 @@ $(function(){
       twttr.anywhere(function (T) {
 
         T("#login").connectButton({
-          authComplete: function(e, user) { me.success(e, user); },
-          singOut: function() { me.singout; }
+          authComplete: function(e, user) { me.success(e, user); }
         });
 
-        $("#signout").bind("click", function () {
-          twttr.anywhere.signOut();
-        });
-
+        $("#signout").bind("click", function() { me.singout; });
       });
     },
     success: function(e, user) {
       this.login = user;
-      console.log(this.user);
+      console.log(this.login);
       alert("Welcome " + this.login);
 
     },
@@ -39,9 +35,8 @@ $(function(){
 
     },
     signout: function(e) {
-
       alert("Bye bye, " + this.login);
-
+      twttr.anywhere.signOut();
     }
   });
 
