@@ -17,8 +17,8 @@ $(function(){
       $.ajax({url:"is_already_authorized", success:function(data) {
         console.log("is authorized? : ", data);
         if (data == "ok") {
-          $(".login").fadeOut("slow");
-          $(".signout").fadeIn("slow");
+          $(".login").hide();
+          $(".signout").show();
         }
       }});
 
@@ -32,8 +32,8 @@ $(function(){
             // from Twitter and the consumer secret
             $.ajax({url:"authorize", success:function(data) {
               if (data == "ok") {
-                $(".login").fadeOut("slow");
-                $(".signout").fadeIn("slow");
+                $(".login").hide();
+                $(".signout").show();
               }
             }});
           },
@@ -41,8 +41,8 @@ $(function(){
             // We must destroy the session after the user has signed out
             $.ajax({url:"signout", success:function(data) {
               if (data == "ok") {
-                $(".login").fadeIn("slow");
-                $(".signout").fadeOut("slow");
+                $(".login").show();
+                $(".signout").hide();
               }
             }});
           }
