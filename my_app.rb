@@ -25,7 +25,7 @@ get '/' do
   erb :index
 end
 
-get '/callaback' do
+get '/callback' do
   content_type :json
     params.to_json
 end
