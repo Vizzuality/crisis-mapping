@@ -19,12 +19,19 @@ $(function(){
           authComplete: function(e, user) {
             me.current_user = T.currentUser;
             me.screen_name = me.current_user.data('screen_name');
+
+            // We must authorize the user internally using the cookie
+            // from Twitter and the consumer secret
             $.ajax({url:"authorize", success:function(data) {
               console.log(data);
             }});
+
           },
           signOut: function() {
-            // Complete with after_signout
+            // We must destroy the session after the user has signed out
+            $.ajax({url:"signout", success:function(data) {
+              console.log(data);
+            }});
           }
         });
 

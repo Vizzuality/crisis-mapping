@@ -22,6 +22,10 @@ configure do
   set :SRID, 4326
 end
 
+def is_authorized?
+  session[:authorized] == true
+end
+
 get '/' do
   erb :index
 end
@@ -30,7 +34,12 @@ get '/authorize' do
   cookie = request.cookies["twitter_anywhere_identity"].split(":")
   user_id = cookie.first
   session[:authorized] = Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == cookie[1]
-  session[:authorized] == true ? "ok" : "nok"
+  is_authorized? ? "ok" : "nok"
+end
+
+get '/signout' do
+  session[:authorized] = nil
+  is_authorized? ? "nok" : "ok"
 end
 
 post '/polygon/create' do
