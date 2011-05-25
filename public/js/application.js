@@ -15,7 +15,7 @@ $(function(){
     setup: function() {
       var me = this;
       twttr.anywhere(function (T) {
-        T("#login").connectButton({
+        T(".login").connectButton({
           authComplete: function(e, user) {
             me.current_user = T.currentUser;
             me.screen_name = me.current_user.data('screen_name');
@@ -35,7 +35,7 @@ $(function(){
           }
         });
 
-        $("#signout").bind("click", function(e) { me.signout(e); });
+        $(".signout").bind("click", function(e) { me.signout(e); });
       });
     },
     success: function(e, user) {
