@@ -1,13 +1,42 @@
 /*
- * Copyright (c) 2011  renardi[at]rdacorp[dot]com  (http://mobile.rdacorp.com)
- * Licensed under the MIT License
- *
- * This is sample demo of Google Map, Twitter Search, Backbone framework
- *
- */
+* Copyright (c) 2011  renardi[at]rdacorp[dot]com  (http://mobile.rdacorp.com)
+* Licensed under the MIT License
+*
+* This is sample demo of Google Map, Twitter Search, Backbone framework
+*
+*/
 $(function(){
 
-	var initialLocation = new google.maps.LatLng( 40.69847032728747, -73.9514422416687 );
+  var initialLocation = new google.maps.LatLng( 40.69847032728747, -73.9514422416687 );
+
+
+  var Twitter = Backbone.Model.extend({
+    defaults: {
+      login: null
+    },
+    setup: function() {
+      var me = this;
+      twttr.anywhere(function (T) {
+        T("#login").connectButton({
+          authComplete: function(e, user) { me.success(e, user); },
+          singOut: function() { me.singout; }
+        });
+
+      });
+    },
+    success: function(e, user) {
+      this.login = user;
+      alert("Welcome " + this.login);
+
+    },
+    error: function() {
+
+    },
+    signout: function() {
+
+
+    }
+  });
 
 	//----------------------------------------
 
@@ -25,13 +54,12 @@ $(function(){
 		map: null,
 		model: null,
 		polygons: [],
-		geocoder: new google.maps.Geocoder(),
 
 		setup: function( options ) {
 			// init model
 			this.model = options.model;
 			// bind following methods to context of this obj
-			_.bindAll(this, 'render', 'query');
+			_.bindAll(this, 'render');
 			// get current location
 			var position = this.model.get("location");
 			// create the map
@@ -77,22 +105,7 @@ $(function(){
 			// centered it when asked
 			if (centered) { this.map.setCenter(position); }
 			return this;
-		},
-
-		query: function( address ) {
-			var self = this;
-			this.geocoder.geocode( {'address': address}, function(results, status) {
-				if (status === "OK") {
-					var position = results[0].geometry.location;
-					if (position) {
-						self.model.set({"location": position, "centered": true});
-					}
-				} else {
-					alert("Geocode was not successful for the following reason: " + status);
-				}
-			});
 		}
-
 	};
 
 
@@ -117,26 +130,8 @@ $(function(){
 
 	    index: function() {
 
- twttr.anywhere(function (T) {
-    T("#login").connectButton({
-      authComplete: function(user) {
-        alert('hola');
-        // triggered when auth completed successfully
-      },
-      signOut: function() {
-        // triggered when user logs out
-      }
-    });
-  });
-
 			// display the current location
-			var position = initialLocation;
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(function(position) {
-					position = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-				});
-			}
-			this.appData.set({"location": position, "centered": true});
+			this.appData.set({"centered": true});
 		},
 		gotoDraw: function() {
 
