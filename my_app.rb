@@ -29,7 +29,7 @@ end
 get '/authorize' do
   cookie = request.cookies["twitter_anywhere_identity"]
   user_id = cookie.split(":").first
-  {:digest => Digest::SHA1.hexdigest(cookie[:user_id] + options.CONSUMER_SECRET), :cookie => cookie}
+  {:digest => Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET), :cookie => cookie}
 end
 
 post '/polygon/create' do
