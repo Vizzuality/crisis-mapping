@@ -28,7 +28,7 @@ $(function(){
           }
         });
 
-        $("#signout").bind("click", function() { me.signout(); });
+        $("#signout").bind("click", function(e) { me.signout(e); });
       });
     },
     success: function(e, user) {
