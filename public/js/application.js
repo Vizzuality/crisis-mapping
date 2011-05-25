@@ -22,7 +22,7 @@ $(function(){
           authComplete: function(e, user) { me.success(e, user); }
         });
 
-        $("#signout").bind("click", function() { me.singout; });
+        $("#signout").bind("click", function() { me.signout; });
       });
     },
     success: function(e, user) {
