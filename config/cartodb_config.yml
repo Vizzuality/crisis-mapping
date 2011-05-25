@@ -1,0 +1,23 @@
+#############################
+# CartoDB Production Instance
+#############################
+production:
+  host: 'https://api.cartodb.com'
+  api_key: 'de5a197b87b4bc0b237dd0fcbea67928a6fc0628'
+  table_name: 'zonas_reparto'
+
+#  auth_key: 'NJjm30LDCThhHteEuL8Zf1I2DhJ6qJHvIgpwAH91'
+#  oauth_secret: 'zw3wb51WSONT4yUAY8KFcPbboISPavY7l6BwMDaO'
+#  table_name: 'zonas_reparto'
+#  cache_timeout: 60
+#  debug: true
+#  ssl_peer_verification: true
+
+#############################
+# CartoDB Local Instance
+#############################
+development:
+  host: 'http://api.localhost.lan:3000'
+  oauth_key: 'AUI7SlKugZ2RxIgynpZ40zi8fimXcMjSkvc57phm'
+  oauth_secret: 'DaZo4G23uypGiOVFBGNkjXuGZdiPCfjdgpXYES0U'
+  table_name: 'zonas_reparto'
