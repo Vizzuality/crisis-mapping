@@ -17,4 +17,6 @@ body{
   height: 100%;
  }
 
- #signout, #login { position:absolute; z-index:100; }
+ #login { left:100px; position:absolute; z-index:100; }
+ #signout { position:absolute; z-index:100; }
+ #signout { padding: 10px; background:red; color:#fff;}
