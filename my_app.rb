@@ -29,9 +29,8 @@ end
 get '/authorize' do
   cookie = request.cookies["twitter_anywhere_identity"].split(":")
   user_id = cookie.first
-  #session[:authorized] = Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == cookie[2]
-  #session[:authorized] == true ? "ok" : "nok"
-  "#{Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET)} #{cookie[2]}"
+  session[:authorized] = Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == cookie[1]
+  session[:authorized] == true ? "ok" : "nok"
 end
 
 post '/polygon/create' do
