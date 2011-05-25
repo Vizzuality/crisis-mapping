@@ -24,7 +24,7 @@ $(function(){
 	var MapView = {
 		map: null,
 		model: null,
-		markers: [],
+		polygons: [],
 		geocoder: new google.maps.Geocoder(),
 
 		setup: function( options ) {
@@ -56,12 +56,12 @@ $(function(){
 		},
 
 		render: function() {
-			// clear previous markers/overlays
-			_.each(this.markers, function(item) {
+			// clear previous polygons/overlays
+			_.each(this.polygons, function(item) {
 				item.setMap(null);
 			});
-			this.markers.length = 0;
-			this.markers = [];
+			this.polygons.length = 0;
+			this.polygons = [];
 			// get current parameters
 			var position = this.model.get("location"),
 			    radius = this.model.get("radius"),
@@ -73,20 +73,7 @@ $(function(){
 				animation: google.maps.Animation.DROP,
 				title: position.lat() + "," + position.lng()
 			});
-			this.markers.push(marker);
-			// draw new circle
-			var circle = new google.maps.Circle({
-				strokeColor: "#FF0000",
-				strokeOpacity: 0.8,
-				strokeWeight: 2,
-				fillColor: "#FF0000",
-				fillOpacity: 0.35,
-				map: this.map,
-				center: position,
-				radius: radius * 1609.344   // miles to meters
-			});
-			circle.bindTo('center', marker, 'position');
-			this.markers.push(circle);
+			this.polygons.push(marker);
 			// centered it when asked
 			if (centered) { this.map.setCenter(position); }
 			return this;
