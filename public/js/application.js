@@ -18,7 +18,8 @@ $(function(){
         if (data == "ok") {
           $(".login").fadeOut("slow");
           $(".signout").fadeIn("slow");
-        }});
+        }
+      }});
 
       twttr.anywhere(function (T) {
         T(".login").connectButton({
