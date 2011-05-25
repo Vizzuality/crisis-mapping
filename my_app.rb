@@ -30,18 +30,23 @@ get '/' do
   erb :index
 end
 
+get '/is_already_authorized' do
+  is_authorized ? "ok" : "nok"
+end
+
 get '/authorize' do
   cookie  = request.cookies["twitter_anywhere_identity"].split(":")
 
   user_id = cookie[0]
   secret  = cookie[1]
 
-  # Let's check if the user is really who he/she is claiming
+  # Let's check if the user is really who he/she is claiming to be or not
   session[:authorized] = Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == secret
   is_authorized? ? "ok" : "nok"
 end
 
 get '/signout' do
+  # We must get rid of the session
   session[:authorized] = nil
   is_authorized? ? "nok" : "ok"
 end

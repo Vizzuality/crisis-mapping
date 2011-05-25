@@ -1,24 +1,8 @@
-html {
-  height: 100%;
-}
+html { height: 100%; }
+body{ font-family:Helvetica, Helvetica Neue, Arial, sans-serif; height:100%; width:100%; margin:0; padding:0; overflow:hidden; background:#bbb; }
 
-body{
-  font-family:Helvetica, Helvetica Neue, Arial, sans-serif;
-  height:100%;
-  width:100%;
-  margin:0;
-  padding:0;
-  overflow:hidden;
-  background:#bbb;
-}
-
-#map-canvas {
-  width: 100%;
-  height: 100%;
- }
-
+#map { width: 100%; height: 100%; }
 
 header { position:absolute; top: 10px; left: 10px; z-index:10;}
 header a.login { }
 header a.signout { display:none; padding: 5px; font-size:11px; background:red; color:#fff;}
-
