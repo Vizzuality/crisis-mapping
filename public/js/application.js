@@ -19,20 +19,21 @@ $(function(){
       var me = this;
       twttr.anywhere(function (T) {
         T("#login").connectButton({
-          authComplete: function(e, user) { me.success(e, user); },
+          authComplete: function(e, user) {
+            me.current_user = T.currentUser;
+            me.success(e, user);
+          },
           signOut: function() {
+            console.log("bye");
           }
-
         });
 
         $("#signout").bind("click", function() { me.signout(); });
       });
     },
     success: function(e, user) {
-      this.current_user = T.currentUser;
       this.login = this.currentUser.data('screen_name');
       alert("Welcome " + this.login);
-
     },
     error: function() {
     },
