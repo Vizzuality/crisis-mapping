@@ -23,14 +23,20 @@ $(function(){
             // We must authorize the user internally using the cookie
             // from Twitter and the consumer secret
             $.ajax({url:"authorize", success:function(data) {
-              console.log(data);
+              if (data == "ok") {
+                $(".login").fadeOut("slow");
+                $(".signout").fadeIn("slow");
+              }
             }});
 
           },
           signOut: function() {
             // We must destroy the session after the user has signed out
             $.ajax({url:"signout", success:function(data) {
-              console.log(data);
+              if (data == "ok") {
+                $(".login").fadeIn("slow");
+                $(".signout").fadeOut("slow");
+              }
             }});
           }
         });

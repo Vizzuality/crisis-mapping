@@ -20,5 +20,5 @@ body{
 
 header { position:absolute; top: 10px; left: 10px; z-index:10;}
 header a.login { }
-header a.signout { padding: 5px; font-size:11px; background:red; color:#fff;}
+header a.signout { display:none; padding: 5px; font-size:11px; background:red; color:#fff;}
 
