@@ -31,7 +31,7 @@ get '/' do
 end
 
 get '/is_already_authorized' do
-  is_authorized ? "ok" : "nok"
+  is_authorized? ? "ok" : "nok"
 end
 
 get '/authorize' do
