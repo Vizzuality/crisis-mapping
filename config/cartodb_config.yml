@@ -3,8 +3,9 @@
 #############################
 production:
   host: 'https://api.cartodb.com'
-  api_key: 'de5a197b87b4bc0b237dd0fcbea67928a6fc0628'
-  table_name: 'zonas_reparto'
+  oauth_key: 'qOySvJB5RAE7rV2HfEXHFlvDINk6qxoP4zV6XxZI'
+  oauth_secret: 'O2FdYgZQo2bcGyf2uUit0MlZvS8x07oSrScTjbUs'
+  table_name: 'crisis'
 
 #  auth_key: 'NJjm30LDCThhHteEuL8Zf1I2DhJ6qJHvIgpwAH91'
 #  oauth_secret: 'zw3wb51WSONT4yUAY8KFcPbboISPavY7l6BwMDaO'
@@ -18,6 +19,6 @@ production:
 #############################
 development:
   host: 'http://api.localhost.lan:3000'
-  oauth_key: 'AUI7SlKugZ2RxIgynpZ40zi8fimXcMjSkvc57phm'
-  oauth_secret: 'DaZo4G23uypGiOVFBGNkjXuGZdiPCfjdgpXYES0U'
-  table_name: 'zonas_reparto'
+  oauth_key: 'qOySvJB5RAE7rV2HfEXHFlvDINk6qxoP4zV6XxZI'
+  oauth_secret: 'O2FdYgZQo2bcGyf2uUit0MlZvS8x07oSrScTjbUs'
+  table_name: 'crisis'

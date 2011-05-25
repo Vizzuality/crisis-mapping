@@ -15,8 +15,8 @@ CartoDB::Connection = CartoDB::Client::Connection.new unless defined? CartoDB::C
 
 configure do
   set :TITLE, "Crisis Mapping"
- # set :table_name, CartoDB::Settings["table_name"]
- # set :connection, CartoDB::Connection
+  set :table_name, CartoDB::Settings["table_name"]
+  set :connection, CartoDB::Connection
   set :GOOGLE_SRID, 3785
   set :SRID, 4326
 end
@@ -25,7 +25,11 @@ get '/' do
   erb :index
 end
 
-get '/callback' do
-  content_type :json
-    params.to_json
+post '/polygon/create' do
+  if coordinates = params[:coordinates]
+    @cartodb = options.connection
+    @cartodb.query("INSERT INTO #{options.table_name} (the_geom) VALUES (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))")
+    return "ok".to_json
+  end
+  return "Error"
 end

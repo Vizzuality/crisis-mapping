@@ -103,6 +103,7 @@ $(function(){
 
 	    routes: {
 	        "":       "index",
+			"draw":  "gotoDraw",
 			"about":  "gotoAbout"
 	    },
 
@@ -115,6 +116,19 @@ $(function(){
 		},
 
 	    index: function() {
+
+ twttr.anywhere(function (T) {
+    T("#login").connectButton({
+      authComplete: function(user) {
+        alert('hola');
+        // triggered when auth completed successfully
+      },
+      signOut: function() {
+        // triggered when user logs out
+      }
+    });
+  });
+
 			// display the current location
 			var position = initialLocation;
 			if (navigator.geolocation) {
@@ -124,7 +138,9 @@ $(function(){
 			}
 			this.appData.set({"location": position, "centered": true});
 		},
+		gotoDraw: function() {
 
+		},
 		gotoAbout: function() {
 		}
 

@@ -17,3 +17,4 @@ body{
   height: 100%;
  }
 
+ #login { position:absolute; z-index:100; }
