@@ -17,12 +17,19 @@ configure do
   set :TITLE, "Crisis Mapping"
   set :table_name, CartoDB::Settings["table_name"]
   set :connection, CartoDB::Connection
+  set :CONSUMER_SECRET, "IgGoRPyo9DeFYZpWuSrIX9BEisEFLYJUm7DI2xmFVg"
   set :GOOGLE_SRID, 3785
   set :SRID, 4326
 end
 
 get '/' do
   erb :index
+end
+
+get '/authorize/:user_id' do
+  cookie = request.cookies["twitter_anywhere_identity"]
+  user_id = params[:user_id]
+  Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET)
 end
 
 post '/polygon/create' do

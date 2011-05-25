@@ -1,8 +1,5 @@
 /*
-* Copyright (c) 2011  renardi[at]rdacorp[dot]com  (http://mobile.rdacorp.com)
-* Licensed under the MIT License
-*
-* This is sample demo of Google Map, Twitter Search, Backbone framework
+* Copyright (c) 2011  vizzuality.com
 *
 */
 $(function(){
@@ -13,7 +10,7 @@ $(function(){
   var Twitter = Backbone.Model.extend({
     defaults: {
       current_user: null,
-      login: null
+      screen_name: null
     },
     setup: function() {
       var me = this;
@@ -21,10 +18,13 @@ $(function(){
         T("#login").connectButton({
           authComplete: function(e, user) {
             me.current_user = T.currentUser;
-            me.success(e, user);
+            me.screen_name = me.current_user.data('screen_name');
+            $.ajax(url: "authorize/"+me.screen_name, success:function(data) {
+              console.log(data);
+            });
           },
           signOut: function() {
-            console.log("bye");
+            // Complete with after_signout
           }
         });
 
@@ -32,17 +32,13 @@ $(function(){
       });
     },
     success: function(e, user) {
-      console.log(e, user);
-      this.login = this.current_user.data('screen_name');
-      alert("Welcome " + this.login);
-    },
-    error: function() {
     },
     signout: function(e) {
       e.preventDefault();
-      alert("Bye bye, " + this.login);
       twttr.anywhere.signOut();
-    }
+    },
+    error: function() {
+    },
   });
 
 	//----------------------------------------
