@@ -14,7 +14,7 @@ CartoDB::Settings   = YAML.load_file("#{File.dirname(__FILE__)}/config/cartodb_c
 CartoDB::Connection = CartoDB::Client::Connection.new unless defined? CartoDB::Connection
 
 configure do
-  #enable :sessions
+  enable :sessions
   set :TITLE, "Crisis Mapping"
   set :table_name, CartoDB::Settings["table_name"]
   set :connection, CartoDB::Connection
@@ -41,7 +41,9 @@ get '/' do
   erb :index
 end
 
-get '/is_authorized' do
+post '/is_authorized' do
+  puts "User: " + params[:twitter_login]
+  session[:twitter_login] = params[:twitter_login]
   is_authorized? ? "ok" : "nok"
 end
 

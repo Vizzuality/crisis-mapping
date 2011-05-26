@@ -30,12 +30,12 @@ $(function(){
 
             // We must authorize the user internally using the cookie
             // from Twitter and the consumer secret
-            $.ajax({url:"is_authorized", success:function(data) {
+            $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
               if (data == "ok") {
                 $(".login").hide();
                 $(".signout").show();
               }
-            }});
+            });
           },
           signOut: function() {
             // We must destroy the session after the user has signed out
