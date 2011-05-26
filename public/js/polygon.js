@@ -107,14 +107,18 @@ var Polygon = Backbone.Model.extend({
 
 var Polygons = Backbone.Collection.extend({
   model: Polygon,
-  initialize: function(map_) {
+  initialize: function() {
     var me = this;
-    this.map_ = map_;
+  },
+  setup: function(map) {
+    this.map_ = map;
+  },
+  draw: function() {
+    var me = this;
 
     $.get("get_polygons", {twitter_login:"javier"}, function(data) {
 
       if (data.rows.length > 0) {
-        console.log("aquí no entras");
       var geojson = eval("("+data.rows[0].st_asgeojson+")");
 
       _.each(geojson.coordinates, function(polygonsData) {
@@ -154,7 +158,7 @@ var Polygons = Backbone.Collection.extend({
     var coordinates = [];
 
 
-    this.collection.map(function(polygon) {
+    this.map(function(polygon) {
 
       var c = [];
       _.each(polygon.get("gpolygon").getPath().getArray(), function(point) {

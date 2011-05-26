@@ -88,7 +88,6 @@ $(function(){
 
       this.current_polygon.bind("finish", function() {
         me.polygons.add(me.current_polygon);
-        console.log(me.current_polygon, me.polygons.length, me.polygons);
 
         me.current_polygon.reset();
         me.polygons.save();
@@ -117,7 +116,9 @@ $(function(){
       };
 
       this.map = new google.maps.Map(document.getElementById("map"), opts);
-      this.polygons = new Polygons(this.map);
+      this.polygons = new Polygons();
+      this.polygons.setup(this.map);
+      this.polygons.draw();
       this.initPolygon();
 
       // bind any model changes
