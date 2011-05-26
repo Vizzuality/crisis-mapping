@@ -24,7 +24,11 @@ configure do
 end
 
 def is_authorized?
-  cookie  = request.cookies["twitter_anywhere_identity"].split(":")
+  twitter_cookie = request.cookies["twitter_anywhere_identity"]
+
+  return false if twitetr_cookie.nil?
+
+  cookie  = twitter_cookie.split(":")
 
   user_id = cookie[0]
   secret  = cookie[1]
