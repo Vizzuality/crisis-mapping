@@ -69,6 +69,7 @@ post '/update' do
   if coordinates = params[:coordinates]
     twitter_login = params[:twitter_login]
     query = "UPDATE #{options.table_name} SET the_geom = (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID})) WHERE twitter_login = '#{twitter_login}'"
+    puts query
     @cartodb = options.connection
     @cartodb.query(query)
     return "ok".to_json

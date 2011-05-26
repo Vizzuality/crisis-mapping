@@ -62,10 +62,19 @@ var Polygon = Backbone.Model.extend({
           _.each(me.markers, function(m) {
             latLngs.push(m.getPosition());
           });
+          latLngs.push(_.first(me.markers).getPosition());
+          me.get("gpolygon").setPath(latLngs);
+          me.parent.save();
+        });
+
+        google.maps.event.addListener(marker, "drag", function() {
+          var latLngs = [];
+          _.each(me.markers, function(m) {
+            latLngs.push(m.getPosition());
+          });
           me.get("gpolygon").setPath(latLngs);
         });
       }
-
     });
   },
   reset: function() {
@@ -156,7 +165,7 @@ var Polygons = Backbone.Collection.extend({
               polygon.enableEditing();
             });
             me.add(polygon);
-            polygon.setup(me.map_, me.parent, points);
+            polygon.setup(me.map_, me, points);
             polygon.draw();
 
           });
