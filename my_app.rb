@@ -24,7 +24,13 @@ configure do
 end
 
 def is_authorized?
-  session[:authorized] == true
+  cookie  = request.cookies["twitter_anywhere_identity"].split(":")
+
+  user_id = cookie[0]
+  secret  = cookie[1]
+
+  # Let's check if the user is really who he/she is claiming to be or not
+  Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == secret
 end
 
 get '/' do
@@ -36,13 +42,6 @@ get '/is_already_authorized' do
 end
 
 get '/authorize' do
-  cookie  = request.cookies["twitter_anywhere_identity"].split(":")
-
-  user_id = cookie[0]
-  secret  = cookie[1]
-
-  # Let's check if the user is really who he/she is claiming to be or not
-  session[:authorized] = Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == secret
   is_authorized? ? "ok" : "nok"
 end
 
