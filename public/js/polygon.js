@@ -28,10 +28,23 @@ var Polygon = Backbone.Model.extend({
     });
   },
   addVertex: function(latLng) {
+    var me = this;
+
     var marker = new google.maps.Marker({
       position:latLng,
       map: this.map
     });
+
+    if (this.vertex.length == 0) {
+      google.maps.event.addListener(marker, "dblclick", function() {
+        me.gpolyline.setPath([]);
+        me.gpolyline.setMap(null);
+        me.vertex.push(_.first(me.vertex));
+
+        me.gpolygon.setPath(me.vertex);
+
+      });
+    }
 
     this.vertex.push(latLng);
     this.gpolyline.setPath(this.vertex);
