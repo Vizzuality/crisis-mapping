@@ -8,6 +8,7 @@ var Polygon = Backbone.Model.extend({
   setup: function(map) {
     this.map = map;
     this.vertex = [];
+    this.markers = [];
 
     this.gpolygon = new google.maps.Polygon({
       path:[],
@@ -27,6 +28,13 @@ var Polygon = Backbone.Model.extend({
       map: this.map
     });
   },
+  reset: function() {
+    _.each(this.markers, function(marker) {
+      marker.setMap(null);
+      delete marker;
+    });
+    this.markers = null;
+  },
   addVertex: function(latLng) {
     var me = this;
 
@@ -34,6 +42,8 @@ var Polygon = Backbone.Model.extend({
       position:latLng,
       map: this.map
     });
+
+    this.markers.push(marker);
 
     if (this.vertex.length == 0) {
       google.maps.event.addListener(marker, "dblclick", function() {
@@ -43,6 +53,7 @@ var Polygon = Backbone.Model.extend({
 
         me.gpolygon.setPath(me.vertex);
 
+        me.trigger("finish");
       });
     }
 

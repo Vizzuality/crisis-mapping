@@ -72,14 +72,16 @@ $(function(){
 
   //----------------------------------------
 
-  
+
 
   var MapView = {
     map: null,
     model: null,
     current_polygon: null,
+    polygons: null,
 
     setup: function( options ) {
+      var me = this;
       // init model
       this.model = options.model;
       // bind following methods to context of this obj
@@ -92,23 +94,33 @@ $(function(){
         center: position,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
+
       this.map = new google.maps.Map(document.getElementById("map"), opts);
 
+      this.polygons = new Polygons();
+
       this.current_polygon = new Polygon();
+
+      _.extend(this.current_polygon, Backbone.Events);
+
+      this.current_polygon.bind("finish", function() {
+        me.polygons.add(me.current_polygon);
+        me.current_polygon.reset();
+        me.current_polygon = null;
+      });
+
       this.current_polygon.setup(this.map);
+
       // bind any model changes
       this.model.bind('change', this.render);
-      // additional behaviors
-      var self = this;
       // - bind the map click event
       google.maps.event.addListener(this.map, 'click', function(event) {
-        self.current_polygon.addVertex(event.latLng);
-        // self.model.set({"location": event.latLng, "centered": false});
+        me.current_polygon.addVertex(event.latLng);
+        // me.model.set({"location": event.latLng, "centered": false});
       });
-      
+
       this.render();
-      
-      
+
       // done
       return this;
     },
