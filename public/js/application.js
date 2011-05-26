@@ -40,6 +40,7 @@ $(function(){
           signOut: function() {
             // We must destroy the session after the user has signed out
             $.ajax({url:"signout", success:function(data) {
+              console.log(data);
               if (data == "ok") {
                 $(".login").show();
                 $(".signout").hide();
@@ -47,7 +48,6 @@ $(function(){
             }});
           }
         });
-
         $(".signout").bind("click", function(e) { me.signout(e); });
       });
     },
