@@ -58,7 +58,7 @@ $(function(){
       twttr.anywhere.signOut();
     },
     error: function() {
-    },
+    }
   });
 
   //----------------------------------------
@@ -66,17 +66,18 @@ $(function(){
   var AppData = Backbone.Model.extend({
     defaults: {
       location: initialLocation,
-      radius: 10,  // default to 10 miles
       centered: false
     }
   });
 
   //----------------------------------------
 
+  
+
   var MapView = {
     map: null,
     model: null,
-    polygons: [],
+    current_polygon: null,
 
     setup: function( options ) {
       // init model
@@ -92,41 +93,34 @@ $(function(){
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       this.map = new google.maps.Map(document.getElementById("map"), opts);
+
+      this.current_polygon = new Polygon();
+      this.current_polygon.setup(this.map);
       // bind any model changes
       this.model.bind('change', this.render);
       // additional behaviors
       var self = this;
       // - bind the map click event
       google.maps.event.addListener(this.map, 'click', function(event) {
-        self.model.set({"location": event.latLng, "centered": false});
+        self.current_polygon.addVertex(event.latLng);
+        // self.model.set({"location": event.latLng, "centered": false});
       });
-      //
+      
       this.render();
+      
+      
       // done
       return this;
     },
 
     render: function() {
       // clear previous polygons/overlays
-      _.each(this.polygons, function(item) {
-        item.setMap(null);
-      });
-      this.polygons.length = 0;
-      this.polygons = [];
-      // get current parameters
-      var position = this.model.get("location"),
-      radius = this.model.get("radius"),
-      centered = this.model.get("centered");
-      // add a new marker
-      var marker = new google.maps.Marker({
-        position: position,
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        title: position.lat() + "," + position.lng()
-      });
-      this.polygons.push(marker);
-      // centered it when asked
-      if (centered) { this.map.setCenter(position); }
+      // _.each(this.polygons, function(item) {
+      //   item.setMap(null);
+      // });
+      // this.polygons.length = 0;
+      // this.polygons = [];
+
       return this;
     }
   };
