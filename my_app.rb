@@ -51,12 +51,11 @@ get '/signout' do
 end
 
 post '/create' do
-  puts "Coordinates" +params[:coordinates]
 
+  puts "Create #{params[:coordinates]}"
   if coordinates = params[:coordinates]
     twitter_login = params[:twitter_login]
     query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{twitter_login}', ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))"
-    puts query
     @cartodb = options.connection
     @cartodb.query(query)
     return "ok".to_json
@@ -64,15 +63,27 @@ post '/create' do
   return "Error"
 end
 
+
 post '/update' do
-  puts "Upadating " +params[:coordinates]
+  puts "Update #{params[:coordinates]}"
   if coordinates = params[:coordinates]
     twitter_login = params[:twitter_login]
     query = "UPDATE #{options.table_name} SET the_geom = (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID})) WHERE twitter_login = '#{twitter_login}'"
-    puts query
     @cartodb = options.connection
     @cartodb.query(query)
     return "ok".to_json
+  end
+  return "Error"
+end
+
+get '/get_polygons' do
+  if twitter_login = params[:twitter_login]
+    query = "SELECT twitter_login, ST_AsGeoJSON(the_geom) FROM #{options.table_name} WHERE twitter_login = '#{twitter_login}';";
+    puts query
+    @cartodb = options.connection
+    result = @cartodb.query(query)
+    puts result
+    return result.to_json
   end
   return "Error"
 end
