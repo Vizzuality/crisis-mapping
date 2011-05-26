@@ -14,7 +14,7 @@ CartoDB::Settings   = YAML.load_file("#{File.dirname(__FILE__)}/config/cartodb_c
 CartoDB::Connection = CartoDB::Client::Connection.new unless defined? CartoDB::Connection
 
 configure do
-  enable :sessions
+  #enable :sessions
   set :TITLE, "Crisis Mapping"
   set :table_name, CartoDB::Settings["table_name"]
   set :connection, CartoDB::Connection
@@ -46,7 +46,7 @@ end
 
 get '/signout' do
   # We must get rid of the session and the cookie
-  response.set_cookie("twitter_anywhere_identity", nil)
+  response.set_cookie("twitter_anywhere_identity", "")
   is_authorized? ? "nok" : "ok"
 end
 
