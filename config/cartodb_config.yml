@@ -3,8 +3,8 @@
 #############################
 production:
   host: 'https://api.cartodb.com'
-  oauth_key: 'qOySvJB5RAE7rV2HfEXHFlvDINk6qxoP4zV6XxZI'
-  oauth_secret: 'O2FdYgZQo2bcGyf2uUit0MlZvS8x07oSrScTjbUs'
+  oauth_key: 'z5aou4GfIVqh9KLBbgKW2gUcj6X0yRZ1TpJgLw6I'
+  oauth_secret: 'F7P0uYeUKsEPahdTY1NizUclLqsR5mijaoWU1Vkm'
   table_name: 'crisis'
 
 #  auth_key: 'NJjm30LDCThhHteEuL8Zf1I2DhJ6qJHvIgpwAH91'
@@ -19,6 +19,6 @@ production:
 #############################
 development:
   host: 'https://api.cartodb.com'
-  oauth_key: 'qOySvJB5RAE7rV2HfEXHFlvDINk6qxoP4zV6XxZI'
-  oauth_secret: 'O2FdYgZQo2bcGyf2uUit0MlZvS8x07oSrScTjbUs'
+  oauth_key: 'z5aou4GfIVqh9KLBbgKW2gUcj6X0yRZ1TpJgLw6I'
+  oauth_secret: 'F7P0uYeUKsEPahdTY1NizUclLqsR5mijaoWU1Vkm'
   table_name: 'crisis'
