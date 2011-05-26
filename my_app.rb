@@ -37,11 +37,7 @@ get '/' do
   erb :index
 end
 
-get '/is_already_authorized' do
-  is_authorized? ? "ok" : "nok"
-end
-
-get '/authorize' do
+get '/is_authorized' do
   is_authorized? ? "ok" : "nok"
 end
 

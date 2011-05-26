@@ -14,7 +14,7 @@ $(function(){
     setup: function() {
       var me = this;
 
-      $.ajax({url:"is_already_authorized", success:function(data) {
+      $.ajax({url:"is_authorized", success:function(data) {
         console.log("is authorized? : ", data);
         if (data == "ok") {
           $(".login").hide();
@@ -30,7 +30,7 @@ $(function(){
 
             // We must authorize the user internally using the cookie
             // from Twitter and the consumer secret
-            $.ajax({url:"authorize", success:function(data) {
+            $.ajax({url:"is_authorized", success:function(data) {
               if (data == "ok") {
                 $(".login").hide();
                 $(".signout").show();
