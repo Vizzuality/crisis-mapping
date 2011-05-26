@@ -26,13 +26,12 @@ end
 def is_authorized?
   twitter_cookie = request.cookies["twitter_anywhere_identity"]
 
-  return false if twitter_cookie.nil?
-
   cookie  = twitter_cookie.split(":")
 
   user_id = cookie[0]
   secret  = cookie[1]
 
+  return false if user_id.nil? or secret.nil?
   # Let's check if the user is really who he/she is claiming to be or not
   Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == secret
 end
