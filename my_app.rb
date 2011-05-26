@@ -43,7 +43,6 @@ end
 
 get '/signout' do
   # We must get rid of the session and the cookie
-  session[:authorized] = nil
   set_cookie["twitter_anywhere_identity"] = nil
   is_authorized? ? "nok" : "ok"
 end
