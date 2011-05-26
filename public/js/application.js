@@ -48,12 +48,13 @@ $(function(){
             }});
           }
         });
-        $(".signout").bind("click", function(e) { me.signout(e); });
+        $(".signout").bind("click", function(e) { console.log("salir"); me.signout(e); });
       });
     },
     success: function(e, user) {
     },
     signout: function(e) {
+      console.log("out");
       e.preventDefault();
       twttr.anywhere.signOut();
     },
