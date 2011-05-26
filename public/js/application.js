@@ -82,23 +82,21 @@ $(function(){
 
     initPolygon: function() {
       var me = this;
-      this.current_polygon = new Polygon();
 
-      _.extend(this.current_polygon, Backbone.Events);
+     // _.extend(this.polygon, Backbone.Events);
 
-      this.current_polygon.bind("finish", function() {
-        me.polygons.add(me.current_polygon);
+     // this.polygon.bind("finish", function() {
+     //   me.polygons.add(me.polygon);
 
-        me.current_polygon.reset();
-        me.polygons.save();
-        me.initPolygon();
-      });
+     //   me.polygon.reset();
+     //   me.polygons.save();
+     //   me.initPolygon();
+     // });
 
-      this.current_polygon.bind("select_me", function(polygon) {
-        polygon.enableEditing();
-      });
+     // this.polygon.bind("select_me", function(polygon) {
+     //   polygon.enableEditing();
+     // });
 
-      this.current_polygon.setup(this.map);
     },
     setup: function( options ) {
       var me = this;
@@ -119,15 +117,10 @@ $(function(){
       this.polygons = new Polygons();
       this.polygons.setup(this.map);
       this.polygons.draw();
-      this.initPolygon();
 
       // bind any model changes
       this.model.bind('change', this.render);
       // - bind the map click event
-      google.maps.event.addListener(this.map, 'click', function(event) {
-        me.current_polygon.addVertex(event.latLng);
-        // me.model.set({"location": event.latLng, "centered": false});
-      });
 
       this.render();
 

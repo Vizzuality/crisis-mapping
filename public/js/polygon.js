@@ -1,17 +1,18 @@
 var Polygon = Backbone.Model.extend({
   defaults: {
     gpolygon:null,
-    colors:['red','blue','yellow'],
+    colors:['red','blue','yellow']
   },
   initialize: function() {
 
   },
-  setup: function(map, points) {
+  setup: function(map, parent, points) {
     var me = this;
     this.map = map;
+    this.parent = parent;
     this.vertex = [];
 
-    if (points) {
+    if (points !== null) {
       this.vertex = points;
     }
 
@@ -41,8 +42,6 @@ var Polygon = Backbone.Model.extend({
     });
   },
   draw: function() {
-    console.log(this.map);
-    console.log(this.vertex);
     this.get("gpolygon").setPath(this.vertex);
   },
   enableEditing: function() {
@@ -54,7 +53,7 @@ var Polygon = Backbone.Model.extend({
     var marker = {};
 
     _.each(points, function(point, i){
-      if (i != 0) {
+      if (i !== 0) {
         marker = new google.maps.Marker({position:point, draggable:true, raiseOnDrag:false, map:me.map});
         me.markers.push(marker);
 
@@ -75,11 +74,11 @@ var Polygon = Backbone.Model.extend({
       marker.setMap(null);
       delete marker;
     });
-    this.markers = null;
+    this.markers = [];
     this.gpolyline.setPath([]);
     this.gpolyline.setMap(null);
   },
-  addVertex: function(latLng) {
+  add_vertex: function(latLng) {
     var me = this;
 
     var marker = new google.maps.Marker({
@@ -89,13 +88,14 @@ var Polygon = Backbone.Model.extend({
 
     this.markers.push(marker);
 
-    if (this.vertex.length == 0) {
+    if (this.vertex.length === 0) {
       google.maps.event.addListener(marker, "dblclick", function() {
         me.vertex.push(_.first(me.vertex));
-
         me.get("gpolygon").setPath(me.vertex);
-
-        me.trigger("finish");
+        me.reset();
+        me.parent.add(me);
+        me.parent.save();
+        me.parent.create_polygon();
       });
     }
 
@@ -106,12 +106,28 @@ var Polygon = Backbone.Model.extend({
 });
 
 var Polygons = Backbone.Collection.extend({
+  current_polygon:null,
   model: Polygon,
   initialize: function() {
     var me = this;
   },
   setup: function(map) {
     this.map_ = map;
+    this.create_polygon();
+  },
+  create_polygon: function() {
+    var me = this;
+    var polygon = new Polygon();
+    polygon.setup(this.map_, this, null);
+
+    polygon.bind("select_me", function(polygon) {
+      polygon.enableEditing();
+    });
+
+    google.maps.event.clearListeners(this.map_, 'click');
+    google.maps.event.addListener(this.map_, 'click', function(event) {
+      polygon.add_vertex(event.latLng);
+    });
   },
   draw: function() {
     var me = this;
@@ -119,47 +135,51 @@ var Polygons = Backbone.Collection.extend({
     $.get("get_polygons", {twitter_login:"javier"}, function(data) {
 
       if (data.rows.length > 0) {
-      var geojson = eval("("+data.rows[0].st_asgeojson+")");
+        var geojson = eval("("+data.rows[0].st_asgeojson+")");
 
-      _.each(geojson.coordinates, function(polygonsData) {
-        _.each(polygonsData, function(coordinates){
+        _.each(geojson.coordinates, function(polygonsData) {
+          _.each(polygonsData, function(coordinates){
 
-
-          var points = [];
-
+            var points = [];
 
             _.each(coordinates, function(c){
               points.push(new google.maps.LatLng(c[1], c[0]));
             });
 
             var polygon = new Polygon();
+
+            polygon.bind("select_me", function(polygon) {
+              if (me.current_polygon) {
+                me.current_polygon.reset();
+              }
+              me.current_polygon = polygon;
+              polygon.enableEditing();
+            });
             me.add(polygon);
-            polygon.setup(me.map_, points);
+            polygon.setup(me.map_, me.parent, points);
             polygon.draw();
 
-        });
+          });
 
-      });
+        });
       }
-    }, "json")
+    }, "json");
   },
   save: function() {
 
     var coordinates = this.get_coordinates();
 
     if (this.length == 1) {
-      $.post("create", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json")
+      $.post("create", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json");
     } else {
-      $.post("update", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json")
+      $.post("update", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json");
     }
 
   },
   get_coordinates: function() {
     var coordinates = [];
 
-
     this.map(function(polygon) {
-
       var c = [];
       _.each(polygon.get("gpolygon").getPath().getArray(), function(point) {
         var lat = point.lat();
@@ -167,9 +187,7 @@ var Polygons = Backbone.Collection.extend({
         c.push([lng + " " + lat]);
       });
       coordinates.push(c.join(","));
-
     });
-
     return coordinates.join(")),((");
   }
 });
