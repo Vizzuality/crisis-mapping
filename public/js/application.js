@@ -39,8 +39,9 @@ $(function(){
           },
           signOut: function() {
             // We must destroy the session after the user has signed out
+            console.log("quitting");
             $.ajax({url:"signout", success:function(data) {
-              console.log(data);
+              console.log("-", data);
               if (data == "ok") {
                 $(".login").show();
                 $(".signout").hide();
@@ -48,13 +49,12 @@ $(function(){
             }});
           }
         });
-        $(".signout").bind("click", function(e) { console.log("salir"); me.signout(e); });
+        $(".signout").bind("click", function(e) { me.signout(e); });
       });
     },
     success: function(e, user) {
     },
     signout: function(e) {
-      console.log("out");
       e.preventDefault();
       twttr.anywhere.signOut();
     },
