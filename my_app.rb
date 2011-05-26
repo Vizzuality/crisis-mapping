@@ -50,12 +50,28 @@ get '/signout' do
   is_authorized? ? "nok" : "ok"
 end
 
-post '/polygon/create' do
-  return unless session[:authorized]
+post '/create' do
+  puts "Coordinates" +params[:coordinates]
 
   if coordinates = params[:coordinates]
+    twitter_login = params[:twitter_login]
+    query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{twitter_login}', ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))"
+    puts query
     @cartodb = options.connection
-    @cartodb.query("INSERT INTO #{options.table_name} (the_geom) VALUES (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))")
+    @cartodb.query(query)
+    return "ok".to_json
+  end
+  return "Error"
+end
+
+post '/update' do
+  puts "Upadating " +params[:coordinates]
+  if coordinates = params[:coordinates]
+    twitter_login = params[:twitter_login]
+    query = "UPDATE #{options.table_name} SET the_geom = (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID})) WHERE twitter_login = '#{twitter_login}'"
+    puts query
+    @cartodb = options.connection
+    @cartodb.query(query)
     return "ok".to_json
   end
   return "Error"

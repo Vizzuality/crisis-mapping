@@ -18,7 +18,7 @@ production:
 # CartoDB Local Instance
 #############################
 development:
-  host: 'http://api.localhost.lan:3000'
+  host: 'https://api.cartodb.com'
   oauth_key: 'qOySvJB5RAE7rV2HfEXHFlvDINk6qxoP4zV6XxZI'
   oauth_secret: 'O2FdYgZQo2bcGyf2uUit0MlZvS8x07oSrScTjbUs'
   table_name: 'crisis'

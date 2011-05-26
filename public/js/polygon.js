@@ -34,18 +34,32 @@ var Polygon = Backbone.Model.extend({
     });
   },
   enableEditing: function() {
+    this.reset();
+
     var me = this;
     var points = this.gpolygon.getPath().getArray();
     this.markers = [];
     var marker = {};
 
     _.each(points, function(point, i){
-      marker = new google.maps.Marker({position:point, map:me.map});
-      me.markers.push(marker);
+      if (i != 0) {
+        marker = new google.maps.Marker({position:point, draggable:true, raiseOnDrag:false, map:me.map});
+        me.markers.push(marker);
+
+        google.maps.event.addListener(marker, "dragend", function() {
+          var latLngs = [];
+          _.each(me.markers, function(m) {
+            latLngs.push(m.getPosition());
+          });
+          me.gpolygon.setPath(latLngs);
+        });
+      }
+
     });
   },
   reset: function() {
     _.each(this.markers, function(marker) {
+      //google.maps.event.clearListener(marker);
       marker.setMap(null);
       delete marker;
     });
@@ -83,6 +97,31 @@ var Polygons = Backbone.Collection.extend({
   model: Polygon,
   save: function() {
 
+    var coordinates = this.get_coordinates();
+
+    if (this.length == 1) {
+      $.post("create", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json")
+    } else {
+      $.post("update", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json")
+    }
+
+  },
+  get_coordinates: function() {
+      var coordinates = [];
+
+      this.map(function(polygon) {
+
+        var c = [];
+        _.each(polygon.gpolygon.getPath().getArray(), function(point) {
+          var lat = point.lat();
+          var lng = point.lng();
+          c.push([lng + " " + lat]);
+        });
+        coordinates.push(c.join(","));
+
+      });
+
+      return coordinates.join(")),((");
   }
 });
 

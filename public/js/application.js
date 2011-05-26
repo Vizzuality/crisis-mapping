@@ -89,6 +89,7 @@ $(function(){
       this.current_polygon.bind("finish", function() {
         me.polygons.add(me.current_polygon);
         me.current_polygon.reset();
+        me.polygons.save();
         me.initPolygon();
       });
 
