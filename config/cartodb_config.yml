@@ -11,8 +11,8 @@ production:
 #  oauth_secret: 'zw3wb51WSONT4yUAY8KFcPbboISPavY7l6BwMDaO'
 #  table_name: 'zonas_reparto'
 #  cache_timeout: 60
-#  debug: true
-#  ssl_peer_verification: true
+  debug: true
+  ssl_peer_verification: true
 
 #############################
 # CartoDB Local Instance
