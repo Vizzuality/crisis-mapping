@@ -26,7 +26,7 @@ end
 def is_authorized?
   twitter_cookie = request.cookies["twitter_anywhere_identity"]
 
-  return false if twitetr_cookie.nil?
+  return false if twitter_cookie.nil?
 
   cookie  = twitter_cookie.split(":")
 
