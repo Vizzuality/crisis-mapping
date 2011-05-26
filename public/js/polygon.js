@@ -141,7 +141,7 @@ var Polygons = Backbone.Collection.extend({
   draw: function() {
     var me = this;
 
-    $.get("get_polygons", {twitter_login:"javier"}, function(data) {
+    $.get("/get_polygons", {twitter_login:"javier"}, function(data) {
 
       if (data.rows.length > 0) {
         var geojson = eval("("+data.rows[0].st_asgeojson+")");

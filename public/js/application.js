@@ -82,21 +82,6 @@ $(function(){
 
     initPolygon: function() {
       var me = this;
-
-     // _.extend(this.polygon, Backbone.Events);
-
-     // this.polygon.bind("finish", function() {
-     //   me.polygons.add(me.polygon);
-
-     //   me.polygon.reset();
-     //   me.polygons.save();
-     //   me.initPolygon();
-     // });
-
-     // this.polygon.bind("select_me", function(polygon) {
-     //   polygon.enableEditing();
-     // });
-
     },
     setup: function( options ) {
       var me = this;
@@ -129,13 +114,6 @@ $(function(){
     },
 
     render: function() {
-      // clear previous polygons/overlays
-      // _.each(this.polygons, function(item) {
-      //   item.setMap(null);
-      // });
-      // this.polygons.length = 0;
-      // this.polygons = [];
-
       return this;
     }
   };
