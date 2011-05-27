@@ -120,8 +120,8 @@ var Polygons = Backbone.Collection.extend({
   initialize: function() {
     var me = this;
   },
-  setup: function(map) {
-    this.map_ = map;
+  setup: function( options ) {
+    this.map_ = options.map;
     this.create_polygon();
   },
   create_polygon: function() {
@@ -138,11 +138,19 @@ var Polygons = Backbone.Collection.extend({
       polygon.add_vertex(event.latLng);
     });
   },
+  refresh:function() {
+    this.clean();
+    this.draw();
+  },
+  clean: function() {
+    this.map(function(polygon) {
+      polygon.get("gpolygon").setMap(null);
+    });
+  },
   draw: function() {
     var me = this;
 
-
-    $.get("/get_polygons", {twitter_login:"javier"}, function(data) {
+    $.get("/get_polygons", function(data) {
 
       if (data.rows.length > 0) {
         var geojson = eval("("+data.rows[0].st_asgeojson+")");
@@ -176,13 +184,12 @@ var Polygons = Backbone.Collection.extend({
     }, "json");
   },
   save: function() {
-
     var coordinates = this.get_coordinates();
 
     if (this.length == 1) {
-      $.post("create", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json");
+      $.post("create", {coordinates:coordinates}, function(data) { console.log(data); }, "json");
     } else {
-      $.post("update", {coordinates:coordinates, twitter_login:"javier"}, function(data) { console.log(data); }, "json");
+      $.post("update", {coordinates:coordinates}, function(data) { console.log(data); }, "json");
     }
 
   },

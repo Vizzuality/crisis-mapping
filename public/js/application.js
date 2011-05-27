@@ -9,9 +9,8 @@ $(function(){
   var initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 
   var Twitter = Backbone.Model.extend({
-    defaults: {
-      current_user: null,
-      screen_name: null
+    initialize: function() {
+     //this.set({screen_name: "prueba"});
     },
     setup: function() {
       var me = this;
@@ -20,9 +19,9 @@ $(function(){
         console.log("is authorized? : ", data);
 
         if (data.authorized) {
-          me.set({screename: data.twitter_login});
-
+          me.set({screen_name: data.twitter_login});
           $(".login").hide();
+          $(".signout").show();
           $(".signout").html(data.twitter_login + ", signout");
         }
       });
@@ -40,7 +39,9 @@ $(function(){
               console.log(data);
 
               if (data.authorized) {
-                me.set({screename: data.twitter_login});
+                console.log("Authorized", data);
+                MapView.polygons.trigger("refresh");
+                me.set({screen_name: data.twitter_login});
 
                 $(".login").hide();
                 $(".signout").html(data.twitter_login + ", signout");
@@ -57,7 +58,9 @@ $(function(){
 
               if (!data.authorized) {
 
-                me.set({screename: data.twitter_login});
+                me.set({screen_name: data.twitter_login});
+
+                MapView.polygons.trigger("clean");
 
                 $(".login").show();
                 $(".signout").html("Signout");
@@ -123,13 +126,22 @@ $(function(){
       $('a.zoom_out').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomOut()});
       
       this.polygons = new Polygons();
-      this.polygons.setup(this.map);
+
+      _.extend(this.polygons, Backbone.Events);
+
+      this.polygons.bind("clean", function() {
+        me.polygons.clean();
+      });
+
+      this.polygons.bind("refresh", function() {
+        me.polygons.refresh();
+      });
+
+      this.polygons.setup({map: this.map});
       this.polygons.draw();
 
       // bind any model changes
       this.model.bind('change', this.render);
-      // - bind the map click event
-
       this.render();
 
       // done
