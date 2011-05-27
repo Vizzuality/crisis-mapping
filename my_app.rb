@@ -52,7 +52,8 @@ get '/signout' do
   # We must get rid of the session and the cookie
   response.set_cookie("twitter_anywhere_identity", "")
   session[:twitter_login] = nil
-  is_authorized? ? {:authorized => false} : {:authorized => true}
+  content_type :json
+    is_authorized? ? {:authorized => false} : {:authorized => true}
 end
 
 post '/create' do

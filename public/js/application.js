@@ -16,7 +16,7 @@ $(function(){
     setup: function() {
       var me = this;
 
-      $.ajax({url:"is_authorized", success:function(data) {
+      $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
         console.log("is authorized? : ", data);
         if (data.authorized == "true") {
           $(".login").hide();
