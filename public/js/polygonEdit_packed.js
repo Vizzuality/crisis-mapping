@@ -40,8 +40,8 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
     }
     var self = this;
     if (flag) {
-      var imgGhostVertex = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(89,30),new google.maps.Point(5, 5));
-      var imgGhostVertexOver = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(89,41),new google.maps.Point(5, 5));
+      var imgGhostVertex = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(11,52),new google.maps.Point(5, 5));
+      var imgGhostVertexOver = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(11,63),new google.maps.Point(5, 5));
       var ghostPath = new google.maps.Polygon({
         map : this.getMap(),
         strokeColor : this.strokeColor,
@@ -157,8 +157,8 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
         return null;
       };
     }
-    var imgVertex = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(78,30),new google.maps.Point(5, 5));
-    var imgVertexOver = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(78,41),new google.maps.Point(5, 5));
+    var imgVertex = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(0,52),new google.maps.Point(5, 5));
+    var imgVertexOver = new google.maps.MarkerImage('img/sprite.png', new google.maps.Size(11, 11),new google.maps.Point(0,63),new google.maps.Point(5, 5));
     var vertexMouseOver = function () {
       this.setIcon(imgVertexOver);
     };
