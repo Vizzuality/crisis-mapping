@@ -209,7 +209,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
         self.getPath().pop().marker.setMap(null);
       }
 
-      $(document).trigger("save");
+      $(document).trigger("removeVertex");
     };
     var createMarkerVertex = function (point) {
       var markerVertex = new google.maps.Marker({

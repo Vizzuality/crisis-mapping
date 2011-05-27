@@ -44,48 +44,19 @@ var Polygon = Backbone.Model.extend({
   draw: function() {
     this.get("gpolygon").setPath(this.vertex);
   },
-  enableEditing: function() {
-    // this.reset();
-    //
-    //     var me = this;
-    //     var points = this.get("gpolygon").getPath().getArray();
-    //     this.markers = [];
-    //     var marker = {};
-    //
-    //     _.each(points, function(point, i){
-    //       if (i !== 0) {
-    //         marker = new google.maps.Marker({position:point, draggable:true, raiseOnDrag:false, map:me.map});
-    //         me.markers.push(marker);
-    //
-    //         google.maps.event.addListener(marker, "dragend", function() {
-    //           var latLngs = [];
-    //           _.each(me.markers, function(m) {
-    //             latLngs.push(m.getPosition());
-    //           });
-    //           latLngs.push(_.first(me.markers).getPosition());
-    //           me.get("gpolygon").setPath(latLngs);
-    //           me.parent.save();
-    //         });
-    //
-    //         google.maps.event.addListener(marker, "drag", function() {
-    //           var latLngs = [];
-    //           _.each(me.markers, function(m) {
-    //             latLngs.push(m.getPosition());
-    //           });
-    //           me.get("gpolygon").setPath(latLngs);
-    //         });
-    //       }
-    //     });
-  },
   reset: function() {
+    this.get("gpolygon").stopEdit();
+
     _.each(this.markers, function(marker) {
-      //google.maps.event.clearListener(marker);
+      google.maps.event.clearListener(marker);
       marker.setMap(null);
       delete marker;
     });
+
     this.markers = [];
     this.gpolyline.setPath([]);
     this.gpolyline.setMap(null);
+    this.get("gpolygon").setMap(null);
   },
   add_vertex: function(latLng) {
     var me = this;
@@ -93,7 +64,6 @@ var Polygon = Backbone.Model.extend({
     var image = new google.maps.MarkerImage('img/sprite.png',new google.maps.Size(11, 11),new google.maps.Point(78,30),new google.maps.Point(5, 5));
 
     var marker = new google.maps.Marker({position: latLng,map: this.map,icon: image});
-
 
     this.markers.push(marker);
 
@@ -103,6 +73,7 @@ var Polygon = Backbone.Model.extend({
         me.reset();
         me.parent.add(me);
         me.parent.store();
+        me.parent.select_polygon(me);
         me.parent.create_polygon();
       });
     }
@@ -139,25 +110,32 @@ var Polygons = Backbone.Collection.extend({
       polygon.add_vertex(event.latLng);
     });
   },
+  select_polygon: function(polygon) {
+    if (this.current_polygon) {
+      this.current_polygon.get("gpolygon").stopEdit();
+      this.current_polygon.reset();
+    }
+
+    this.current_polygon = polygon;
+    polygon.get("gpolygon").runEdit(true);
+  },
   bind_polygon: function(polygon) {
     var me = this;
 
     polygon.bind("select_me", function(p) {
 
-      if (me.current_polygon) {
-        me.current_polygon.get("gpolygon").stopEdit();
-        me.current_polygon.reset();
-      }
+      me.select_polygon(p);
 
-      me.current_polygon = polygon;
+      $(document).unbind("removeVertex");
 
-      $(document).unbind("save");
-
-      $(document).bind("save", function() {
+      $(document).bind("removeVertex", function() {
+        if (polygon.vertex.length < 3) {
+          p.reset();
+          me.remove(p);
+        }
         me.store();
       });
 
-      p.get("gpolygon").runEdit(true);
     });
   },
   refresh:function() {
