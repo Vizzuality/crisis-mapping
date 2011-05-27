@@ -97,6 +97,7 @@ $(function(){
     current_polygon: null,
     polygons: null,
 
+
     initPolygon: function() {
       var me = this;
     },
@@ -112,10 +113,15 @@ $(function(){
       var opts = {
         zoom: 8,
         center: position,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        disableDefaultUI: true
       };
 
       this.map = new google.maps.Map(document.getElementById("map"), opts);
+      
+      $('a.zoom_in').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomIn()});
+      $('a.zoom_out').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomOut()});
+      
       this.polygons = new Polygons();
       this.polygons.setup(this.map);
       this.polygons.draw();
@@ -132,7 +138,18 @@ $(function(){
 
     render: function() {
       return this;
+    },
+    
+    zoomIn: function() {
+      var zoom = this.map.getZoom();
+      this.map.setZoom(zoom+1);
+    },
+    
+    zoomOut: function() {
+      var zoom = this.map.getZoom();
+      this.map.setZoom(zoom-1);
     }
+    
   };
 
   var App = Backbone.Controller.extend({
@@ -144,6 +161,8 @@ $(function(){
       "draw": "gotoDraw",
       "about": "gotoAbout"
     },
+    
+
 
     initialize: function() {
       this.appData = new AppData();
@@ -164,7 +183,7 @@ $(function(){
     },
     gotoAbout: function() {
     }
-
+    
   });
 
   //----------------------------------------

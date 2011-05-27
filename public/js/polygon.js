@@ -141,7 +141,6 @@ var Polygons = Backbone.Collection.extend({
   draw: function() {
     var me = this;
 
-    console.log("Usuario: " + app.twitter.get("screen_name"));
 
     $.get("/get_polygons", {twitter_login:"javier"}, function(data) {
 
