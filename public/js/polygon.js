@@ -143,6 +143,9 @@ var Polygons = Backbone.Collection.extend({
     this.draw();
   },
   clean: function() {
+    this.markers(function(marker) {
+      marker.setMap(null);
+    });
     this.map(function(polygon) {
       polygon.get("gpolygon").setMap(null);
     });
