@@ -143,6 +143,8 @@ var Polygons = Backbone.Collection.extend({
   draw: function() {
     var me = this;
 
+    console.log(this.twitter_screen_name);
+
     $.get("/get_polygons", {twitter_login:this.twitter_screen_name}, function(data) {
 
       if (data.rows.length > 0) {
@@ -179,6 +181,7 @@ var Polygons = Backbone.Collection.extend({
   save: function() {
     var coordinates = this.get_coordinates();
 
+    console.log("Save:", this.twitter_screen_name);
     if (this.length == 1) {
       $.post("create", {coordinates:coordinates, twitter_login:this.twitter_screen_name}, function(data) { console.log(data); }, "json");
     } else {

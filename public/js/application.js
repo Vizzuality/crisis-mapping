@@ -9,6 +9,9 @@ $(function(){
   var initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 
   var Twitter = Backbone.Model.extend({
+    initialize: function() {
+     //this.set({screen_name: "prueba"});
+    },
     setup: function() {
       var me = this;
 
@@ -36,6 +39,7 @@ $(function(){
               console.log(data);
 
               if (data.authorized) {
+                console.log("Authorized", data);
                 me.set({screen_name: data.twitter_login});
 
                 $(".login").hide();
