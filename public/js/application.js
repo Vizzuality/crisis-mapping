@@ -73,7 +73,7 @@ $(function(){
         });
         $(".signout").bind("click", function(e) { me.signout(e); });
       });
-    }
+    },
     signout: function(e) {
       e.preventDefault();
       twttr.anywhere.signOut();
