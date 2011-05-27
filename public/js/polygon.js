@@ -152,7 +152,7 @@ var Polygons = Backbone.Collection.extend({
   },
   draw: function() {
     var me = this;
-    console.log("Drawing polygons");
+
     $.get("/get_polygons", function(data) {
 
       if (data.rows.length > 0) {
