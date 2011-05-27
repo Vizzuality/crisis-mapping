@@ -22,6 +22,7 @@ $(function(){
           me.set({screen_name: data.twitter_login});
 
           $(".login").hide();
+          $(".signout").show();
           $(".signout").html(data.twitter_login + ", signout");
         }
       });
