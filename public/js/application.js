@@ -20,9 +20,6 @@ $(function(){
 
         if (data.authorized) {
           me.set({screen_name: data.twitter_login});
-
-          MapView.polygons.trigger("refresh");
-
           $(".login").hide();
           $(".signout").show();
           $(".signout").html(data.twitter_login + ", signout");
@@ -43,6 +40,7 @@ $(function(){
 
               if (data.authorized) {
                 console.log("Authorized", data);
+                MapView.polygons.trigger("refresh");
                 me.set({screen_name: data.twitter_login});
 
                 $(".login").hide();
