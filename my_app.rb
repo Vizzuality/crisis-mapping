@@ -53,7 +53,7 @@ get '/signout' do
   response.set_cookie("twitter_anywhere_identity", "")
   session[:twitter_login] = nil
   content_type :json
-    is_authorized? ? {:authorized => false}.to_json : {:authorized => true}.to_json
+    is_authorized? ? {:authorized => false, :cookie => request.cookies["twitter_anywhere_identity"] }.to_json : {:authorized => true, :cookie =>request.cookies["twitter_anywhere_identity"] }.to_json
 end
 
 post '/create' do
