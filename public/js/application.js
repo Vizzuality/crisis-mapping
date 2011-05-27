@@ -20,7 +20,7 @@ $(function(){
         console.log("is authorized? : ", data);
         if (data.authorized) {
           $(".login").hide();
-          $(".signout").show();
+          $(".signout").html(data.twitter_login + ", signout");
         }
       });
 
@@ -37,6 +37,7 @@ $(function(){
               if (data.authorized) {
                 $(".login").hide();
                 $(".signout").show();
+                $(".signout").html(data.twitter_login + ", signout");
               }
             });
           },
