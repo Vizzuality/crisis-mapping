@@ -40,7 +40,7 @@ def is_authorized?(twitter_login = "")
   return false if user_id.nil? or secret.nil?
   # Let's check if the user is really who he/she is claiming to be or not
   puts "#{Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET)} == #{secret}"
-  Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == secret
+  return Digest::SHA1.hexdigest(user_id + options.CONSUMER_SECRET) == secret
 end
 
 get '/' do
@@ -56,6 +56,7 @@ get '/signout' do
   # We must get rid of the session and the cookie
   response.set_cookie("twitter_anywhere_identity", "")
   session[:twitter_login] = nil
+  puts "is_authorized: #{is_authorized?}"
   content_type :json
     is_authorized? ? {:authorized => false, :cookie => request.cookies["twitter_anywhere_identity"] }.to_json : {:authorized => true, :cookie =>request.cookies["twitter_anywhere_identity"] }.to_json
 end
