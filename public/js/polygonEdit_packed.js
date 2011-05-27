@@ -9,15 +9,15 @@
  *               class google.maps.Polygon by methods runEdit() and stopEdit()<br/>
  *               Enjoy guys:)
  *               <br/>Special thanks <code>Jan Pieter Waagmeester jieter@jpwaag.com</code> for the idea of using the library google.maps.geometry , which performs spherical linear interpolation between the two locations.
- *               <br/>Special thanks <code>James Ratcliff falazar@yahoo.com</code> for the idea of extending my previous script polylineEdit.js to polygonEdit.js   
+ *               <br/>Special thanks <code>James Ratcliff falazar@yahoo.com</code> for the idea of extending my previous script polylineEdit.js to polygonEdit.js
  */
 /**
  * @name google
- * @class The fundamental namespace for Google APIs 
+ * @class The fundamental namespace for Google APIs
  */
 /**
  * @name google.maps
- * @class The fundamental namespace for Google Maps V3 API 
+ * @class The fundamental namespace for Google Maps V3 API
  */
 /**
  * @name google.maps.Polygon
@@ -29,7 +29,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
    * Starts editing the polygon. Optional parameter <code>flag</code>
    * indicates the use of ghost markers in the middle of each segment. By
    * default, the <code>flag</code> is true.
-   * 
+   *
    * @param {}
    *            flag - (true) include additional points in the middle of each
    *            segment
@@ -63,7 +63,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
               ghostPath.setPath([this.marker.getPosition(), this.getPosition(), self.getPath().getAt(0)]);
             }
           }
-        }  
+        }
         ghostPath.getPath().setAt(1, this.getPosition());
       };
       var moveGhostMarkers = function (marker) {
@@ -91,7 +91,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
               }
             }
           }
-        } 
+        }
         if ((typeof(prevVertex) !== "undefined") && (typeof(prevVertex.ghostMarker) !== "undefined")) {
           if (typeof(google.maps.geometry) === "undefined") {
             prevVertex.ghostMarker.setPosition(new google.maps.LatLng(prevVertex.lat() + 0.5 * (marker.getPosition().lat() - prevVertex.lat()), prevVertex.lng() + 0.5 * (marker.getPosition().lng() - prevVertex.lng())));
@@ -175,6 +175,12 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
       }
     };
     var vertexRightClick = function () {
+      if (self.getPath().getLength() === 3) {
+        if (!confirm("Are you sure?")) {
+          return;
+        }
+      }
+
       if (flag) {
         var Vertex = self.getPath().getAt(this.inex);
         if (this.inex === 0) {
@@ -199,7 +205,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
             prevVertex.ghostMarker = undefined;
           }
         }
-      } 
+      }
       else {
         self.getPath().removeAt(this.inex);
       }
@@ -208,6 +214,8 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
         prevVertex.ghostMarker.setMap(null);
         self.getPath().pop().marker.setMap(null);
       }
+
+      $(document).trigger("removeVertex");
     };
     var createMarkerVertex = function (point) {
       var markerVertex = new google.maps.Marker({

@@ -44,45 +44,14 @@ var Polygon = Backbone.Model.extend({
   draw: function() {
     this.get("gpolygon").setPath(this.vertex);
   },
-  enableEditing: function() {
-    // this.reset();
-    // 
-    //     var me = this;
-    //     var points = this.get("gpolygon").getPath().getArray();
-    //     this.markers = [];
-    //     var marker = {};
-    // 
-    //     _.each(points, function(point, i){
-    //       if (i !== 0) {
-    //         marker = new google.maps.Marker({position:point, draggable:true, raiseOnDrag:false, map:me.map});
-    //         me.markers.push(marker);
-    // 
-    //         google.maps.event.addListener(marker, "dragend", function() {
-    //           var latLngs = [];
-    //           _.each(me.markers, function(m) {
-    //             latLngs.push(m.getPosition());
-    //           });
-    //           latLngs.push(_.first(me.markers).getPosition());
-    //           me.get("gpolygon").setPath(latLngs);
-    //           me.parent.save();
-    //         });
-    // 
-    //         google.maps.event.addListener(marker, "drag", function() {
-    //           var latLngs = [];
-    //           _.each(me.markers, function(m) {
-    //             latLngs.push(m.getPosition());
-    //           });
-    //           me.get("gpolygon").setPath(latLngs);
-    //         });
-    //       }
-    //     });
-  },
   reset: function() {
+    this.get("gpolygon").stopEdit();
+
     _.each(this.markers, function(marker) {
-      //google.maps.event.clearListener(marker);
       marker.setMap(null);
       delete marker;
     });
+
     this.markers = [];
     this.gpolyline.setPath([]);
     this.gpolyline.setMap(null);
@@ -94,7 +63,6 @@ var Polygon = Backbone.Model.extend({
 
     var marker = new google.maps.Marker({position: latLng,map: this.map,icon: image});
 
-
     this.markers.push(marker);
 
     if (this.vertex.length === 0) {
@@ -102,7 +70,8 @@ var Polygon = Backbone.Model.extend({
         me.get("gpolygon").setPath(me.vertex);
         me.reset();
         me.parent.add(me);
-        me.parent.save();
+        me.parent.store();
+        me.parent.select_polygon(me);
         me.parent.create_polygon();
       });
     }
@@ -126,18 +95,46 @@ var Polygons = Backbone.Collection.extend({
   create_polygon: function() {
     var me = this;
     var polygon = new Polygon();
-    polygon.setup(this.map_, this, null);
 
-    polygon.bind("select_me", function(polygon) {
-      polygon.enableEditing();
-    });
+    polygon.setup(this.map_, this, null);
+    this.bind_polygon(polygon);
 
     google.maps.event.clearListeners(this.map_, 'click');
     google.maps.event.addListener(this.map_, 'click', function(event) {
       if (me.current_polygon) {
+        me.current_polygon.get("gpolygon").stopEdit();
         me.current_polygon.reset();
       }
       polygon.add_vertex(event.latLng);
+    });
+  },
+  select_polygon: function(polygon) {
+    if (this.current_polygon) {
+      this.current_polygon.get("gpolygon").stopEdit();
+      this.current_polygon.reset();
+    }
+
+    this.current_polygon = polygon;
+    polygon.get("gpolygon").runEdit(true);
+  },
+  bind_polygon: function(polygon) {
+    var me = this;
+
+    polygon.bind("select_me", function(p) {
+
+      me.select_polygon(p);
+
+      $(document).unbind("removeVertex");
+
+      $(document).bind("removeVertex", function() {
+        if (polygon.vertex.length < 3) {
+          p.get("gpolygon").setMap(null);
+          p.reset();
+          me.remove(p);
+        }
+        me.store();
+      });
+
     });
   },
   refresh:function() {
@@ -163,21 +160,17 @@ var Polygons = Backbone.Collection.extend({
 
             var points = [];
 
-            _.each(coordinates, function(c){
-              points.push(new google.maps.LatLng(c[1], c[0]));
+            // Since we're using polygonEdit.js, we don't need to draw the last point
+            _.each(coordinates, function(c, i){
+              if (i < coordinates.length - 1) {
+                points.push(new google.maps.LatLng(c[1], c[0]));
+              }
             });
 
             var polygon = new Polygon();
 
-            polygon.bind("select_me", function(polygon) {
-              if (me.current_polygon) {
-                me.current_polygon.get("gpolygon").stopEdit();
-                me.current_polygon.reset();
-              }
-              me.current_polygon = polygon;
-              polygon.get("gpolygon").runEdit(true);
-              polygon.enableEditing();
-            });
+            me.bind_polygon(polygon);
+
             me.add(polygon);
             polygon.setup(me.map_, me, points);
             polygon.draw();
@@ -188,7 +181,8 @@ var Polygons = Backbone.Collection.extend({
       }
     }, "json");
   },
-  save: function() {
+  store: function() {
+    console.log("saving");
     var coordinates = this.get_coordinates();
 
     if (this.length == 1) {
@@ -196,20 +190,33 @@ var Polygons = Backbone.Collection.extend({
     } else {
       $.post("update", {coordinates:coordinates}, function(data) { console.log(data); }, "json");
     }
-
   },
   get_coordinates: function() {
     var coordinates = [];
+    var first_coordinate = [];
 
     this.map(function(polygon) {
       var c = [];
-      _.each(polygon.get("gpolygon").getPath().getArray(), function(point) {
+      var gpolygons = polygon.get("gpolygon").getPath().getArray();
+
+      // Since we're using polygonEdit.js, we have to copy the first point again
+      _.each(gpolygons, function(point, i) {
         var lat = point.lat();
         var lng = point.lng();
         c.push([lng + " " + lat]);
+
+        if (i == 0) {
+          first_coordinate = [lng + " " + lat];
+        }
+
+        if (i == gpolygons.length - 1) {
+          c.push(first_coordinate);
+        }
+
       });
       coordinates.push(c.join(","));
     });
+
     return coordinates.join(")),((");
   }
 });
