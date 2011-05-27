@@ -23,7 +23,7 @@ configure do
   set :SRID, 4326
 end
 
-def is_authorized?(twitter_login)
+def is_authorized?(twitter_login = "")
   twitter_cookie = request.cookies["twitter_anywhere_identity"]
   return false if twitter_cookie.nil? or twitter_cookie == ""
 
@@ -45,7 +45,7 @@ end
 
 post '/is_authorized' do
   content_type :json
-    is_authorized?(params[:twitter_login]) ? {:authorized => true, :twitter_login => session[:twitter_login]} : {:authorized => false}
+    is_authorized?(params[:twitter_login]) ? {:authorized => true, :twitter_login => session[:twitter_login]}.to_json : {:authorized => false}.to_json
 end
 
 get '/signout' do
@@ -53,7 +53,7 @@ get '/signout' do
   response.set_cookie("twitter_anywhere_identity", "")
   session[:twitter_login] = nil
   content_type :json
-    is_authorized? ? {:authorized => false} : {:authorized => true}
+    is_authorized? ? {:authorized => false}.to_json : {:authorized => true}.to_json
 end
 
 post '/create' do
