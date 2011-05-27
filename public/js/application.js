@@ -1,10 +1,12 @@
 /*
+*
 * Copyright (c) 2011  vizzuality.com
 *
 */
+
 $(function(){
 
-  var initialLocation = new google.maps.LatLng( 40.69847032728747, -73.9514422416687 );
+  var initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 
   var Twitter = Backbone.Model.extend({
     defaults: {
@@ -16,7 +18,7 @@ $(function(){
 
       $.ajax({url:"is_authorized", success:function(data) {
         console.log("is authorized? : ", data);
-        if (data == "ok") {
+        if (data.authorized == "true") {
           $(".login").hide();
           $(".signout").show();
         }
@@ -31,7 +33,8 @@ $(function(){
             // We must authorize the user internally using the cookie
             // from Twitter and the consumer secret
             $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
-              if (data == "ok") {
+              console.log(data);
+              if (data.authorized == "true") {
                 $(".login").hide();
                 $(".signout").show();
               }
@@ -42,9 +45,12 @@ $(function(){
             console.log("quitting");
             $.ajax({url:"signout", success:function(data) {
               console.log("-", data);
-              if (data == "ok") {
+              if (data.authorized == "false") {
                 $(".login").show();
                 $(".signout").hide();
+              } else {
+                alert("There was an error signing you out");
+                console.log(data);
               }
             }});
           }
@@ -52,13 +58,9 @@ $(function(){
         $(".signout").bind("click", function(e) { me.signout(e); });
       });
     },
-    success: function(e, user) {
-    },
     signout: function(e) {
       e.preventDefault();
       twttr.anywhere.signOut();
-    },
-    error: function() {
     }
   });
 

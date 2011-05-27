@@ -23,7 +23,7 @@ configure do
   set :SRID, 4326
 end
 
-def is_authorized?
+def is_authorized?(twitter_login)
   twitter_cookie = request.cookies["twitter_anywhere_identity"]
   return false if twitter_cookie.nil? or twitter_cookie == ""
 
@@ -31,6 +31,8 @@ def is_authorized?
 
   user_id = cookie[0]
   secret  = cookie[1]
+
+  session[:twitter_login] = twitter_login unless twitter_login.nil? or twitter_login == ""
 
   return false if user_id.nil? or secret.nil?
   # Let's check if the user is really who he/she is claiming to be or not
@@ -42,15 +44,15 @@ get '/' do
 end
 
 post '/is_authorized' do
-  puts "User: " + params[:twitter_login]
-  session[:twitter_login] = params[:twitter_login]
-  is_authorized? ? "ok" : "nok"
+  content_type :json
+    is_authorized?(params[:twitter_login]) ? {:authorized => true, :twitter_login => session[:twitter_login]} : {:authorized => false}
 end
 
 get '/signout' do
   # We must get rid of the session and the cookie
   response.set_cookie("twitter_anywhere_identity", "")
-  is_authorized? ? "nok" : "ok"
+  session[:twitter_login] = nil
+  is_authorized? ? {:authorized => false} : {:authorized => true}
 end
 
 post '/create' do
