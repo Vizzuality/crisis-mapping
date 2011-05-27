@@ -22,7 +22,7 @@ $(function(){
           $(".login").hide();
           $(".signout").show();
         }
-      }});
+      });
 
       twttr.anywhere(function (T) {
         T(".login").connectButton({
