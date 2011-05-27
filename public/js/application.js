@@ -9,10 +9,6 @@ $(function(){
   var initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 
   var Twitter = Backbone.Model.extend({
-    defaults: {
-      current_user: null,
-      screen_name: null
-    },
     setup: function() {
       var me = this;
 
@@ -20,7 +16,7 @@ $(function(){
         console.log("is authorized? : ", data);
 
         if (data.authorized) {
-          me.set({screename: data.twitter_login});
+          me.set({screen_name: data.twitter_login});
 
           $(".login").hide();
           $(".signout").html(data.twitter_login + ", signout");
@@ -40,7 +36,7 @@ $(function(){
               console.log(data);
 
               if (data.authorized) {
-                me.set({screename: data.twitter_login});
+                me.set({screen_name: data.twitter_login});
 
                 $(".login").hide();
                 $(".signout").html(data.twitter_login + ", signout");
@@ -57,7 +53,7 @@ $(function(){
 
               if (!data.authorized) {
 
-                me.set({screename: data.twitter_login});
+                me.set({screen_name: data.twitter_login});
 
                 $(".login").show();
                 $(".signout").html("Signout");
@@ -92,6 +88,7 @@ $(function(){
 
 
   var MapView = {
+    twitter: null,
     map: null,
     model: null,
     current_polygon: null,
@@ -104,6 +101,7 @@ $(function(){
       var me = this;
       // init model
       this.model = options.model;
+      this.twitter = options.twitter;
       // bind following methods to context of this obj
       _.bindAll(this, 'render');
       // get current location
@@ -117,13 +115,11 @@ $(function(){
 
       this.map = new google.maps.Map(document.getElementById("map"), opts);
       this.polygons = new Polygons();
-      this.polygons.setup(this.map);
+      this.polygons.setup({map: this.map, screen_name:this.twitter.get("screen_name")});
       this.polygons.draw();
 
       // bind any model changes
       this.model.bind('change', this.render);
-      // - bind the map click event
-
       this.render();
 
       // done
@@ -149,7 +145,7 @@ $(function(){
       this.appData = new AppData();
       this.twitter = new Twitter();
 
-      MapView.setup({model: this.appData});
+      MapView.setup({model: this.appData, twitter:this.twitter});
       return this;
     },
 
