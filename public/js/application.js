@@ -124,7 +124,8 @@ $(function(){
       _.extend(this.polygons, Backbone.Events);
 
       this.polygons.bind("refresh", function() {
-        me.polygons.draw();
+        console.log("Refreshing polygons");
+        me.polygons.refresh();
       });
 
       this.polygons.setup({map: this.map});

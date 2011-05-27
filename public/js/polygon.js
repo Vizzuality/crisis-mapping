@@ -138,9 +138,18 @@ var Polygons = Backbone.Collection.extend({
       polygon.add_vertex(event.latLng);
     });
   },
+  refresh:function() {
+    console.log("Refresh");
+
+    this.map(function(polygon) {
+      polygon.get("gpolygon").setMap(null);
+    });
+
+   this.draw();
+  },
   draw: function() {
     var me = this;
-
+    console.log("Drawing polygons");
     $.get("/get_polygons", function(data) {
 
       if (data.rows.length > 0) {
