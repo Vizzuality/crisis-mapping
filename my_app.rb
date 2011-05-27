@@ -58,7 +58,7 @@ get '/signout' do
   session[:twitter_login] = nil
   puts "is_authorized: #{is_authorized?}"
   content_type :json
-    is_authorized? ? {:authorized => false, :cookie => request.cookies["twitter_anywhere_identity"] }.to_json : {:authorized => true, :cookie =>request.cookies["twitter_anywhere_identity"] }.to_json
+    is_authorized? ? {:authorized => true, :cookie => request.cookies["twitter_anywhere_identity"] }.to_json : {:authorized => false, :cookie =>request.cookies["twitter_anywhere_identity"] }.to_json
 end
 
 post '/create' do
