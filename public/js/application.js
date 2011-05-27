@@ -18,7 +18,7 @@ $(function(){
 
       $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
         console.log("is authorized? : ", data);
-        if (data.authorized == "true") {
+        if (data.authorized) {
           $(".login").hide();
           $(".signout").show();
         }
@@ -34,7 +34,7 @@ $(function(){
             // from Twitter and the consumer secret
             $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
               console.log(data);
-              if (data.authorized == "true") {
+              if (data.authorized) {
                 $(".login").hide();
                 $(".signout").show();
               }
@@ -45,7 +45,7 @@ $(function(){
             console.log("quitting");
             $.ajax({url:"signout", success:function(data) {
               console.log("-", data);
-              if (data.authorized == "false") {
+              if (!data.authorized) {
                 $(".login").show();
                 $(".signout").hide();
               } else {
