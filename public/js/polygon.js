@@ -172,9 +172,11 @@ var Polygons = Backbone.Collection.extend({
 
             polygon.bind("select_me", function(polygon) {
               if (me.current_polygon) {
+                me.current_polygon.get("gpolygon").stopEdit();
                 me.current_polygon.reset();
               }
               me.current_polygon = polygon;
+              polygon.get("gpolygon").runEdit(true);
               polygon.enableEditing();
             });
             me.add(polygon);
