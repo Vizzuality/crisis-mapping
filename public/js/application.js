@@ -116,11 +116,22 @@ $(function(){
       var opts = {
         zoom: 8,
         center: position,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControlOptions: {
+    	      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'cartodb']
+    	   },
         disableDefaultUI: true
       };
 
       this.map = new google.maps.Map(document.getElementById("map"), opts);
+      
+      
+      var stylez = [{featureType: "all",elementType: "all",stylers: [{ saturation: -79 }]}];
+      var styledMapOptions = {name: "cartodb"}
+      var jayzMapType = new google.maps.StyledMapType(stylez, styledMapOptions);
+
+      this.map.mapTypes.set('cartodb', jayzMapType);
+      this.map.setMapTypeId('cartodb');	
+      
 
       $('a.zoom_in').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomIn()});
       $('a.zoom_out').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomOut()});

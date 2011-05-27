@@ -59,7 +59,7 @@ var Polygon = Backbone.Model.extend({
   add_vertex: function(latLng) {
     var me = this;
 
-    var image = new google.maps.MarkerImage('img/sprite.png',new google.maps.Size(11, 11),new google.maps.Point(78,30),new google.maps.Point(5, 5));
+    var image = new google.maps.MarkerImage('img/sprite.png',new google.maps.Size(11, 11),new google.maps.Point(0,52),new google.maps.Point(5, 5));
 
     var marker = new google.maps.Marker({position: latLng,map: this.map,icon: image});
 
