@@ -53,6 +53,8 @@ $(function(){
             console.log("quitting");
             $.ajax({url:"signout", success:function(data) {
 
+              twttr.anywhere.signOut();
+
               console.log("-", data);
 
               if (!data.authorized) {
@@ -71,10 +73,6 @@ $(function(){
         });
         $(".signout").bind("click", function(e) { me.signout(e); });
       });
-    },
-    signout: function(e) {
-      e.preventDefault();
-      twttr.anywhere.signOut();
     }
   });
 
