@@ -21,6 +21,8 @@ $(function(){
         if (data.authorized) {
           me.set({screen_name: data.twitter_login});
 
+          MapView.polygons.trigger("refresh");
+
           $(".login").hide();
           $(".signout").show();
           $(".signout").html(data.twitter_login + ", signout");
@@ -118,6 +120,13 @@ $(function(){
 
       this.map = new google.maps.Map(document.getElementById("map"), opts);
       this.polygons = new Polygons();
+
+      _.extend(this.polygons, Backbone.Events);
+
+      this.polygons.bind("refresh", function() {
+        me.polygons.draw();
+      });
+
       this.polygons.setup({map: this.map});
       this.polygons.draw();
 
