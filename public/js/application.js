@@ -20,7 +20,7 @@ $(function(){
 
         if (data.authorized) {
           me.set({screen_name: data.twitter_login});
-          $(".login").hide();
+          $(".mamufas").hide();
           $(".signout").show();
           $(".signout").html(data.twitter_login + ", signout");
         }
@@ -43,7 +43,7 @@ $(function(){
                 MapView.polygons.trigger("refresh");
                 me.set({screen_name: data.twitter_login});
 
-                $(".login").hide();
+                $(".mamufas").hide();
                 $(".signout").html(data.twitter_login + ", signout");
                 $(".signout").show();
               }
@@ -121,10 +121,10 @@ $(function(){
       };
 
       this.map = new google.maps.Map(document.getElementById("map"), opts);
-      
+
       $('a.zoom_in').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomIn()});
       $('a.zoom_out').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomOut()});
-      
+
       this.polygons = new Polygons();
 
       _.extend(this.polygons, Backbone.Events);
@@ -151,17 +151,17 @@ $(function(){
     render: function() {
       return this;
     },
-    
+
     zoomIn: function() {
       var zoom = this.map.getZoom();
       this.map.setZoom(zoom+1);
     },
-    
+
     zoomOut: function() {
       var zoom = this.map.getZoom();
       this.map.setZoom(zoom-1);
     }
-    
+
   };
 
   var App = Backbone.Controller.extend({
@@ -173,7 +173,7 @@ $(function(){
       "draw": "gotoDraw",
       "about": "gotoAbout"
     },
-    
+
 
 
     initialize: function() {
@@ -195,7 +195,7 @@ $(function(){
     },
     gotoAbout: function() {
     }
-    
+
   });
 
   //----------------------------------------

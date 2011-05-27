@@ -24,6 +24,12 @@ configure do
 end
 
 def is_authorized?(twitter_login = "")
+
+  if ENV["RACK_ENV"] == "development"
+    session[:twitter_login] = "cartodb";
+    return true
+  end
+
   twitter_cookie = request.cookies["twitter_anywhere_identity"]
 
   puts "twitter_cookie -> #{twitter_cookie}"
