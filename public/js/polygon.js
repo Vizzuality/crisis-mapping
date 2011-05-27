@@ -135,6 +135,9 @@ var Polygons = Backbone.Collection.extend({
 
     google.maps.event.clearListeners(this.map_, 'click');
     google.maps.event.addListener(this.map_, 'click', function(event) {
+      if (me.current_polygon) {
+        me.current_polygon.reset();
+      }
       polygon.add_vertex(event.latLng);
     });
   },
