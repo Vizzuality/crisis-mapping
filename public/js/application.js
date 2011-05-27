@@ -92,7 +92,6 @@ $(function(){
 
 
   var MapView = {
-    twitter: null,
     map: null,
     model: null,
     current_polygon: null,
@@ -105,7 +104,6 @@ $(function(){
       var me = this;
       // init model
       this.model = options.model;
-      this.twitter = options.twitter;
       // bind following methods to context of this obj
       _.bindAll(this, 'render');
       // get current location
@@ -119,7 +117,7 @@ $(function(){
 
       this.map = new google.maps.Map(document.getElementById("map"), opts);
       this.polygons = new Polygons();
-      this.polygons.setup({map: this.map, screen_name:this.twitter.get("screen_name")});
+      this.polygons.setup({map: this.map});
       this.polygons.draw();
 
       // bind any model changes
@@ -149,7 +147,7 @@ $(function(){
       this.appData = new AppData();
       this.twitter = new Twitter();
 
-      MapView.setup({model: this.appData, twitter:this.twitter});
+      MapView.setup({model: this.appData});
       return this;
     },
 
