@@ -20,7 +20,7 @@ $(function(){
         console.log("is authorized? : ", data);
 
         if (data.authorized) {
-          this.set({screename: data.twitter_login});
+          me.set({screename: data.twitter_login});
 
           $(".login").hide();
           $(".signout").html(data.twitter_login + ", signout");
@@ -40,7 +40,7 @@ $(function(){
               console.log(data);
 
               if (data.authorized) {
-                this.set({screename: data.twitter_login});
+                me.set({screename: data.twitter_login});
 
                 $(".login").hide();
                 $(".signout").html(data.twitter_login + ", signout");
@@ -57,7 +57,7 @@ $(function(){
 
               if (!data.authorized) {
 
-                this.set({screename: data.twitter_login});
+                me.set({screename: data.twitter_login});
 
                 $(".login").show();
                 $(".signout").html("Signout");
