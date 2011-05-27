@@ -53,8 +53,6 @@ $(function(){
             console.log("quitting");
             $.ajax({url:"signout", success:function(data) {
 
-              twttr.anywhere.signOut();
-
               console.log("-", data);
 
               if (!data.authorized) {
