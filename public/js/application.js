@@ -60,6 +60,8 @@ $(function(){
 
                 me.set({screen_name: data.twitter_login});
 
+                MapView.polygons.trigger("clean");
+
                 $(".login").show();
                 $(".signout").html("Signout");
                 $(".signout").hide();
@@ -121,8 +123,11 @@ $(function(){
 
       _.extend(this.polygons, Backbone.Events);
 
+      this.polygons.bind("clean", function() {
+        me.polygons.clean();
+      });
+
       this.polygons.bind("refresh", function() {
-        console.log("Refreshing polygons");
         me.polygons.refresh();
       });
 

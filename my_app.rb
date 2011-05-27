@@ -63,7 +63,7 @@ end
 
 post '/create' do
   puts "Create #{params[:coordinates]}"
-  if coordinates = params[:coordinates]
+  if is_authorized? and coordinates = params[:coordinates]
     query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{session[:twitter_login]}', ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))"
     @cartodb = options.connection
     @cartodb.query(query)
@@ -74,7 +74,7 @@ end
 
 post '/update' do
   puts "Update #{params[:coordinates]}"
-  if coordinates = params[:coordinates]
+  if is_authorized? and coordinates = params[:coordinates]
     query = "UPDATE #{options.table_name} SET the_geom = (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID})) WHERE twitter_login = '#{session[:twitter_login]}'"
     puts query
     @cartodb = options.connection

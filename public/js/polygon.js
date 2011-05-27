@@ -139,13 +139,13 @@ var Polygons = Backbone.Collection.extend({
     });
   },
   refresh:function() {
-    console.log("Refresh");
-
+    this.clean();
+    this.draw();
+  },
+  clean: function() {
     this.map(function(polygon) {
       polygon.get("gpolygon").setMap(null);
     });
-
-   this.draw();
   },
   draw: function() {
     var me = this;
