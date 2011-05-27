@@ -132,6 +132,10 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
           google.maps.event.addListener(markerGhostVertex, "dragend", vertexGhostDragEnd);
           point.ghostMarker = markerGhostVertex;
           markerGhostVertex.marker = point.marker;
+
+
+          $(document).trigger("createGhostVertex");
+
           return markerGhostVertex;
         } else {
            if (point.marker.inex === self.getPath().getLength() - 1) {
@@ -165,6 +169,17 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
     var vertexMouseOut = function () {
       this.setIcon(imgVertex);
     };
+    var vertexDragEnd = function () {
+      var movedVertex = this.getPosition();
+      movedVertex.marker = this;
+      movedVertex.ghostMarker = self.getPath().getAt(this.inex).ghostMarker;
+      self.getPath().setAt(this.inex, movedVertex);
+      if (flag) {
+        moveGhostMarkers(this);
+      }
+
+      $(document).trigger("moveVertex");
+    };
     var vertexDrag = function () {
       var movedVertex = this.getPosition();
       movedVertex.marker = this;
@@ -174,7 +189,10 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
         moveGhostMarkers(this);
       }
     };
+
     var vertexRightClick = function () {
+      console.log("right click:", self.getPath().getLength());
+
       if (self.getPath().getLength() === 3) {
         if (!confirm("Are you sure?")) {
           return;
@@ -228,6 +246,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
       google.maps.event.addListener(markerVertex, "mouseover", vertexMouseOver);
       google.maps.event.addListener(markerVertex, "mouseout", vertexMouseOut);
       google.maps.event.addListener(markerVertex, "drag", vertexDrag);
+      google.maps.event.addListener(markerVertex, "dragend", vertexDragEnd);
       google.maps.event.addListener(markerVertex, "rightclick", vertexRightClick);
       point.marker = markerVertex;
       return markerVertex;

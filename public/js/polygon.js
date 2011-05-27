@@ -124,10 +124,20 @@ var Polygons = Backbone.Collection.extend({
 
       me.select_polygon(p);
 
-      $(document).unbind("removeVertex");
+      //$(document).unbind("removeVertex");
+
+      $(document).bind("createGhostVertex", function(path) {
+        me.store();
+      });
+
+      $(document).bind("moveVertex", function() {
+        console.log("moving", p.vertex.length);
+        me.store();
+      });
 
       $(document).bind("removeVertex", function() {
-        if (polygon.vertex.length < 3) {
+        console.log("removing", p.vertex.length);
+        if (p.vertex.length < 3) {
           p.get("gpolygon").setMap(null);
           p.reset();
           me.remove(p);
@@ -184,6 +194,8 @@ var Polygons = Backbone.Collection.extend({
   store: function() {
     console.log("saving");
     var coordinates = this.get_coordinates();
+
+    console.log("Length: ", this.length);
 
     if (this.length == 1) {
       $.post("create", {coordinates:coordinates}, function(data) { console.log(data); }, "json");
