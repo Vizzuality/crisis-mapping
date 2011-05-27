@@ -175,6 +175,12 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
       }
     };
     var vertexRightClick = function () {
+      if (self.getPath().getLength() === 3) {
+        if (!confirm("Are you sure?")) {
+          return;
+        }
+      }
+
       if (flag) {
         var Vertex = self.getPath().getAt(this.inex);
         if (this.inex === 0) {

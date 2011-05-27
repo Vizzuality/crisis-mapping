@@ -48,7 +48,6 @@ var Polygon = Backbone.Model.extend({
     this.get("gpolygon").stopEdit();
 
     _.each(this.markers, function(marker) {
-      google.maps.event.clearListener(marker);
       marker.setMap(null);
       delete marker;
     });
@@ -56,7 +55,6 @@ var Polygon = Backbone.Model.extend({
     this.markers = [];
     this.gpolyline.setPath([]);
     this.gpolyline.setMap(null);
-    this.get("gpolygon").setMap(null);
   },
   add_vertex: function(latLng) {
     var me = this;
@@ -130,6 +128,7 @@ var Polygons = Backbone.Collection.extend({
 
       $(document).bind("removeVertex", function() {
         if (polygon.vertex.length < 3) {
+          p.get("gpolygon").setMap(null);
           p.reset();
           me.remove(p);
         }
