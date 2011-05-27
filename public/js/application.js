@@ -18,7 +18,10 @@ $(function(){
 
       $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
         console.log("is authorized? : ", data);
+
         if (data.authorized) {
+          this.set({screename: data.twitter_login});
+
           $(".login").hide();
           $(".signout").html(data.twitter_login + ", signout");
         }
@@ -33,11 +36,15 @@ $(function(){
             // We must authorize the user internally using the cookie
             // from Twitter and the consumer secret
             $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
+
               console.log(data);
+
               if (data.authorized) {
+                this.set({screename: data.twitter_login});
+
                 $(".login").hide();
-                $(".signout").show();
                 $(".signout").html(data.twitter_login + ", signout");
+                $(".signout").show();
               }
             });
           },
@@ -45,9 +52,15 @@ $(function(){
             // We must destroy the session after the user has signed out
             console.log("quitting");
             $.ajax({url:"signout", success:function(data) {
+
               console.log("-", data);
+
               if (!data.authorized) {
+
+                this.set({screename: data.twitter_login});
+
                 $(".login").show();
+                $(".signout").html("Signout");
                 $(".signout").hide();
               } else {
                 alert("There was an error signing you out");
