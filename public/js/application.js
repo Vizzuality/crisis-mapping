@@ -20,7 +20,7 @@ $(function(){
 
         if (data.authorized) {
           me.set({screen_name: data.twitter_login});
-          $(".mamufas").hide();
+          $(".mamufas").fadeOut();
           $(".signout").show();
           $(".signout").html(data.twitter_login + ", signout");
         }
@@ -43,7 +43,7 @@ $(function(){
                 MapView.polygons.trigger("refresh");
                 me.set({screen_name: data.twitter_login});
 
-                $(".mamufas").hide();
+                $(".mamufas").fadeOut();
                 $(".signout").html(data.twitter_login + ", signout");
                 $(".signout").show();
               }
@@ -62,7 +62,7 @@ $(function(){
 
                 MapView.polygons.trigger("clean");
 
-                $(".login").show();
+                $(".mamufas").fadeIn();
                 $(".signout").html("Signout");
                 $(".signout").hide();
               } else {

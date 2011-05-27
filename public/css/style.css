@@ -5,7 +5,6 @@ body{ font-family:Helvetica, Helvetica Neue, Arial, sans-serif; height:100%; wid
 
 header { position:absolute; top: 30px; right: 10px; z-index:10;}
 
-
 section.map_controls {position:absolute; top:10px; left:10px; width:26px; height:52px;}
 section.map_controls a {display:inline-block; width:26px; height:26px; background-image:url('/img/sprite.png'); text-indent:-9999px;}
 section.map_controls a.zoom_in {background-position:0 0;}
@@ -17,9 +16,9 @@ section.mamufas {position:absolute; display:block; top:0; right:0; bottom:0; lef
 section.mamufas div.info {position:absolute; top:50%; left:50%; width:260px; height:160px; margin:-100px 0 0 -150px; padding:20px;
   background-image:-webkit-gradient(linear,left bottom,left top,color-stop(0.11,rgb(194,194,194)),color-stop(0.56,rgb(222,222,222)),color-stop(1,rgb(240,240,240)));
   background-image:-moz-linear-gradient(center bottom,rgb(194,194,194) 11%,rgb(222,222,222) 56%,rgb(240,240,240) 100%); border-radius:10px; -webkit-border-radius:10px; -moz-border-radius:10px;}
-section.mamufas div.info h1 {font:bold 25px "Helvetica Neue"; color:#333333; letter-spacing:-1px;}  
+section.mamufas div.info h1 {font:bold 25px "Helvetica Neue"; color:#333333; letter-spacing:-1px;}
 section.mamufas div.info p {font:normal 14px "Helvetica"; color:#333333;}
 section.mamufas div.info a.login {display:inline-block; margin:10px 0 0 0;}
-section.mamufas div.info a.signout { display:none; padding: 5px; font-size:11px; background:red; color:#fff;}
-  
-  
+a.signout { position:absolute; right: 10px; top: 10px; display:none; padding: 5px; font-size:11px; background:red; color:#fff; z-index:10}
+
+
