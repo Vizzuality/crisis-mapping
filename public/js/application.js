@@ -184,28 +184,32 @@ $(function(){
       "about": "gotoAbout"
     },
 
-
-
     initialize: function() {
       this.appData = new AppData();
       this.twitter = new Twitter();
 
       MapView.setup({model: this.appData});
+
+      this.appData.set({"centered": true});
+      this.twitter.setup();
+
+      $(".remove").bind("click", function() {
+
+        MapView.polygons.remove_polygon();
+
+      });
+
       return this;
     },
 
     index: function() {
-
       // display the current location
-      this.appData.set({"centered": true});
-      this.twitter.setup();
     },
     gotoDraw: function() {
 
     },
     gotoAbout: function() {
     }
-
   });
 
   //----------------------------------------

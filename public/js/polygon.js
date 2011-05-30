@@ -108,6 +108,28 @@ var Polygons = Backbone.Collection.extend({
       polygon.add_vertex(event.latLng);
     });
   },
+  remove_polygon: function() {
+    var me = this;
+                      var found = false;
+      this.map(function(polygon) {
+        if (!found && me.current_polygon.get("gpolygon") === polygon.get("gpolygon")) {
+
+          polygon.get("gpolygon").setMap(null);
+          polygon.reset();
+          me.remove(polygon);
+
+          if (me.length == 0) {
+            me.empty_polygon();
+          } else {
+            me.store();
+          }
+
+          me.current_polygon = null;
+          found = true;
+        }
+      });
+
+  },
   select_polygon: function(polygon) {
     var me = this;
 
@@ -134,7 +156,7 @@ var Polygons = Backbone.Collection.extend({
       });
 
       $(document).bind("removeVertex", function(evt, vertex_count) {
-        console.log("vertex_count: ", vertex_count);
+        //console.log("vertex_count: ", vertex_count);
 
         if (vertex_count < 3) {
           polygon.get("gpolygon").setMap(null);
@@ -187,7 +209,6 @@ var Polygons = Backbone.Collection.extend({
             var polygon = new Polygon();
 
             me.add(polygon);
-            console.log("Collection of: ", this.length);
             polygon.setup(me.map_, me, points);
             polygon.draw();
 
@@ -203,9 +224,7 @@ var Polygons = Backbone.Collection.extend({
     $.post("reset", function(data) { console.log(data); }, "json");
   },
   store: function() {
-    console.log("saving");
     var coordinates = this.get_coordinates();
-    console.log("Length: ", this.length, "Coordinates: ", coordinates);
     $.post("update", {coordinates:coordinates}, function(data) { console.log(data); }, "json");
   },
   get_coordinates: function() {
