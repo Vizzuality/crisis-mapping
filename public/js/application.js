@@ -92,36 +92,25 @@ $(function(){
 
   //----------------------------------------
 
-
-
   var MapView = {
     map: null,
     model: null,
     current_polygon: null,
     polygons: null,
 
-
     initPolygon: function() {
       var me = this;
     },
-    setup: function( options ) {
-      var me = this;
-      // init model
-      this.model = options.model;
-      // bind following methods to context of this obj
-      _.bindAll(this, 'render');
-      // get current location
-      var position = this.model.get("location");
-      // create the map
+
+    setupMap: function() {
       var opts = {
         zoom: 8,
-        center: position,
+        center: this.model.get("location"),
         mapTypeControlOptions: {
     	      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'cartodb']
     	   },
         disableDefaultUI: true
       };
-
       this.map = new google.maps.Map(document.getElementById("map"), opts);
 
       var stylez = [{featureType: "all",elementType: "all",stylers: [{ saturation: -79 }]}];
@@ -131,13 +120,21 @@ $(function(){
       this.map.mapTypes.set('cartodb', jayzMapType);
       this.map.setMapTypeId('cartodb');
 
-
       $('a.zoom_in').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomIn()});
       $('a.zoom_out').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomOut()});
+    },
+    setup: function( options ) {
+      var me = this;
 
+      // init model
+      this.model = options.model;
+      this.setupMap();
       this.polygons = new Polygons();
 
       _.extend(this.polygons, Backbone.Events);
+
+      // bind following methods to context of this obj
+      _.bindAll(this, 'render');
 
       this.polygons.bind("clean", function() {
         me.polygons.clean();
@@ -180,22 +177,33 @@ $(function(){
     routes: {
       "":"index",
       "draw": "gotoDraw",
-      "about": "gotoAbout"
+      "about": "gotoAbout",
+      "result": "gotoResult"
     },
 
     initialize: function() {
       this.appData = new AppData();
       this.twitter = new Twitter();
 
-      MapView.setup({model: this.appData});
-
-      this.appData.set({"centered": true});
-      this.twitter.setup();
-
       return this;
     },
     index: function() {
       // display the current location
+      MapView.setup({model: this.appData});
+
+      this.appData.set({"centered": true});
+      this.twitter.setup();
+    },
+    gotoResult: function() {
+      var opts = {
+        zoom: 8,
+        center: initialLocation,
+        mapTypeControlOptions: {
+    	      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'cartodb']
+    	   },
+        disableDefaultUI: true
+      };
+      $("section.tools, section.tips, section.mamufas").hide();
     }
   });
 

@@ -193,7 +193,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
       console.log("right click:", self.getPath().getLength());
 
       if (self.getPath().getLength() === 3) {
-        if (!confirm("Are you sure?")) {
+        if (!confirm("Are you sure? This action will remove the whole polygon.")) {
           return;
         }
       }

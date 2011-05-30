@@ -1,7 +1,7 @@
 var Polygon = Backbone.Model.extend({
   defaults: {
     gpolygon:null,
-    colors:['red','blue','yellow']
+    colors:["#DC143C", "#FF69B4", "#FFD700", "#FFA07A", "#FF4500", "#FFFF00", "#008000", "#9400D3", "#191970", "#BADA55", "#FF8C00"]
   },
   initialize: function() {
 
@@ -18,28 +18,30 @@ var Polygon = Backbone.Model.extend({
 
     this.markers = [];
 
+    var colors = this.get("colors");
+    var color = colors[Math.floor(Math.random()*colors.length)];
+
     this.set({gpolygon:new google.maps.Polygon({
       path:[],
-      strokeColor: "#FF0000",
+      strokeColor: color,
       strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#FF0000",
-      fillOpacity: 0.35,
+      strokeWeight: 1,
+      fillColor: color,
+      fillOpacity: 0.4,
       map: this.map
     })
     });
 
     this.gpolyline = new google.maps.Polyline({
       path:[],
-      strokeColor: "#FF0000",
+      strokeColor: color,
       strokeOpacity: 0.8,
-      strokeWeight: 2,
+      strokeWeight: 1,
       map: this.map
     });
 
     google.maps.event.addListener(this.get("gpolygon"), 'click', function(event) {
       me.parent.select_polygon(me);
-      //me.trigger("select_me", me);
     });
   },
   draw: function() {
@@ -147,23 +149,16 @@ var Polygons = Backbone.Collection.extend({
 
       this.current_polygon.unbind("select_me");
       this.current_polygon.get("gpolygon").stopEdit();
-      //this.current_polygon.reset();
     }
 
     this.current_polygon = polygon;
 
     polygon.get("gpolygon").runEdit(true);
 
-      $(document).bind("createGhostVertex", function() {
-        me.store();
-      });
-
-      $(document).bind("moveVertex", function() {
-        me.store();
-      });
+      $(document).bind("createGhostVertex", function() { me.store(); });
+      $(document).bind("moveVertex", function() { me.store(); });
 
       $(document).bind("removeVertex", function(evt, vertex_count) {
-
         if (vertex_count < 3) {
           polygon.get("gpolygon").setMap(null);
           polygon.reset();
