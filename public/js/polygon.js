@@ -90,8 +90,15 @@ var Polygons = Backbone.Collection.extend({
     var me = this;
   },
   setup: function( options ) {
+    var me = this;
+
     this.map_ = options.map;
     this.create_polygon();
+
+    $(".remove").bind("click", function() {
+      me.remove_polygon();
+    });
+
   },
   create_polygon: function() {
     var me = this;
@@ -156,7 +163,6 @@ var Polygons = Backbone.Collection.extend({
       });
 
       $(document).bind("removeVertex", function(evt, vertex_count) {
-        //console.log("vertex_count: ", vertex_count);
 
         if (vertex_count < 3) {
           polygon.get("gpolygon").setMap(null);
@@ -216,16 +222,16 @@ var Polygons = Backbone.Collection.extend({
 
         });
       } else {
-        $.post("setup_row", function(data) { console.log(data); }, "json");
+        $.post("setup_row", function(data) { }, "json");
       }
     }, "json");
   },
   empty_polygon: function() {
-    $.post("reset", function(data) { console.log(data); }, "json");
+    $.post("reset", function(data) { }, "json");
   },
   store: function() {
     var coordinates = this.get_coordinates();
-    $.post("update", {coordinates:coordinates}, function(data) { console.log(data); }, "json");
+    $.post("update", {coordinates:coordinates}, function(data) { }, "json");
   },
   get_coordinates: function() {
     var coordinates = [];

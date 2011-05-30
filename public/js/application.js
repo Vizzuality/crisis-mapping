@@ -171,7 +171,6 @@ $(function(){
       var zoom = this.map.getZoom();
       this.map.setZoom(zoom-1);
     }
-
   };
 
   var App = Backbone.Controller.extend({
@@ -193,22 +192,10 @@ $(function(){
       this.appData.set({"centered": true});
       this.twitter.setup();
 
-      $(".remove").bind("click", function() {
-
-        MapView.polygons.remove_polygon();
-
-      });
-
       return this;
     },
-
     index: function() {
       // display the current location
-    },
-    gotoDraw: function() {
-
-    },
-    gotoAbout: function() {
     }
   });
 
