@@ -113,6 +113,8 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
             vertex.marker.inex = inex;
           }
         });
+
+        $(document).trigger("moveVertex");
       };
       var createGhostMarkerVertex = function (point) {
         if (point.marker.inex < self.getPath().getLength() - 1) {
@@ -133,8 +135,6 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
           point.ghostMarker = markerGhostVertex;
           markerGhostVertex.marker = point.marker;
 
-
-          $(document).trigger("createGhostVertex");
 
           return markerGhostVertex;
         } else {
@@ -177,7 +177,6 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
       if (flag) {
         moveGhostMarkers(this);
       }
-
       $(document).trigger("moveVertex");
     };
     var vertexDrag = function () {
@@ -233,7 +232,7 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
         self.getPath().pop().marker.setMap(null);
       }
 
-      $(document).trigger("removeVertex");
+      $(document).trigger("removeVertex", self.getPath().getLength());
     };
     var createMarkerVertex = function (point) {
       var markerVertex = new google.maps.Marker({

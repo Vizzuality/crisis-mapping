@@ -67,16 +67,38 @@ get '/signout' do
     is_authorized? ? {:authorized => true, :cookie => request.cookies["twitter_anywhere_identity"] }.to_json : {:authorized => false, :cookie =>request.cookies["twitter_anywhere_identity"] }.to_json
 end
 
-post '/create' do
-  puts "Create #{params[:coordinates]}"
-  if is_authorized? and coordinates = params[:coordinates]
-    query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{session[:twitter_login]}', ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))"
+post '/reset' do
+  puts "Reset"
+  if is_authorized?
+    query = "UPDATE #{options.table_name} SET the_geom = NULL WHERE twitter_login = '#{session[:twitter_login]}'"
     @cartodb = options.connection
     @cartodb.query(query)
     return "ok".to_json
   end
   return "Error"
 end
+
+post '/setup_row' do
+  puts "Setup row"
+  if is_authorized?
+    query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{session[:twitter_login]}', NULL)"
+    @cartodb = options.connection
+    @cartodb.query(query)
+    return "ok".to_json
+  end
+  return "Error"
+end
+
+#post '/create' do
+#  puts "Create #{params[:coordinates]}"
+#  if is_authorized? and coordinates = params[:coordinates]
+#    query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{session[:twitter_login]}', ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))"
+#    @cartodb = options.connection
+#    @cartodb.query(query)
+#    return "ok".to_json
+#  end
+#  return "Error"
+#end
 
 post '/update' do
   puts "Update #{params[:coordinates]}"
