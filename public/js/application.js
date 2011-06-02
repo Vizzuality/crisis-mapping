@@ -6,7 +6,7 @@
 
 $(function(){
 
-  var initialLocation = new google.maps.LatLng(18.5564014, -72.2540801);
+  var initialLocation = new google.maps.LatLng(18.553, -72.343);
 
   var Twitter = Backbone.Model.extend({
     initialize: function() {
@@ -97,22 +97,65 @@ $(function(){
     },
 
     setupMap: function() {
+      var me = this;
+
       var opts = {
-        zoom: 8,
+        zoom: 19,
+            minZoom:13 ,
+
         center: this.model.get("location"),
-        mapTypeControlOptions: {
-    	      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'cartodb']
+          mapTypeId: google.maps.MapTypeId.SATELLITE,
+          mapTypeControlOptions: {
+            mapTypeIds: ['Before','After'],
+            style: google.maps.NavigationControlStyle.SMALL,
+            position: google.maps.ControlPosition.TOP_CENTER
     	   },
-        disableDefaultUI: true
+         zoomControl:false,
+         scaleControl:false,
+         navigationControl: false
+
       };
       this.map = new google.maps.Map(document.getElementById("map"), opts);
 
       var stylez = [{featureType: "all",elementType: "all",stylers: [{ saturation: -79 }]}];
       var styledMapOptions = {name: "cartodb"}
-      var jayzMapType = new google.maps.StyledMapType(stylez, styledMapOptions);
 
-      this.map.mapTypes.set('cartodb', jayzMapType);
-      this.map.setMapTypeId('cartodb');
+
+      var beforeOptions = {
+            getTileUrl: function(tile, zoom) {
+                var ymax = 1 << zoom;
+                var y = ymax - tile.y - 1;
+                return "http://mechanicalmapping2.s3.amazonaws.com/AOI1/before/" + zoom + "/" + tile.x + "/" + y + ".png";
+            },
+            tileSize: new google.maps.Size(256, 256),
+            opacity:1.0,
+            isPng: true,
+            maxZoom: 20,
+            name: "Before Earthquake"
+        };
+
+
+   /*
+         Initialisation of the layer After EarthQuake AOI1
+         */
+        var afterOptions = {
+            getTileUrl: function(tile, zoom) {
+                var ymax = 1 << zoom;
+                var y = ymax - tile.y - 1;
+                return "http://mechanicalmapping2.s3.amazonaws.com/AOI1/after/" + zoom + "/" + tile.x + "/" + y + ".jpg";
+            },
+            tileSize: new google.maps.Size(256, 256),
+            opacity:1.0,
+            isPng: false,
+            maxZoom: 20,
+            name: "After"
+        };
+
+        // layers
+        this.map.mapTypes.set('Before', new google.maps.ImageMapType(beforeOptions));
+        this.map.mapTypes.set('After', new  google.maps.ImageMapType(afterOptions));
+
+
 
       $('a.zoom_in').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomIn()});
       $('a.zoom_out').click(function(ev){ev.stopPropagation();ev.preventDefault();me.zoomOut()});

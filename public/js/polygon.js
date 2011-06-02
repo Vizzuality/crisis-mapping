@@ -45,7 +45,6 @@ var Polygon = Backbone.Model.extend({
     });
   },
   draw: function() {
-    console.log(this.vertex);
     this.get("gpolygon").setPath(this.vertex);
   },
   reset: function() {

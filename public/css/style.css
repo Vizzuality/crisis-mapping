@@ -24,7 +24,7 @@ section.tools a.draw.selected:hover {background-position:-89px 0;}
 section.tools a.signout {display:inline-block; width:68px; height:35px; margin:0 0 0 10px; background:url('/img/sprite.png') no-repeat -233px 0; text-indent:-9999px;}
 section.tools a.signout:hover {background-position:-233px -35px;}
 
-section.tips {position:absolute; top:10px; right:50%; margin:0 -120px 0 0; padding:10px 10px 5px 10px; background:rgba(0,0,0,0.7); border-radius:10px; -webkit-border-radius:10px; -moz-border-radius:10px;}
+section.tips {position:absolute; bottom:10px; right:10px; padding:10px 10px 5px 10px; background:rgba(0,0,0,0.7); border-radius:10px; -webkit-border-radius:10px; -moz-border-radius:10px;}
 section.tips ul {font:normal 13px Arial; color:white;}
 section.tips ul li {padding:0 0 5px;}
 
