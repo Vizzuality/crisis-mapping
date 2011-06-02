@@ -190,8 +190,6 @@ if (typeof(google.maps.Polygon.prototype.runEdit) === "undefined") {
     };
 
     var vertexRightClick = function () {
-      console.log("right click:", self.getPath().getLength());
-
       if (self.getPath().getLength() === 3) {
         if (!confirm("Are you sure? This action will remove the whole polygon.")) {
           return;
