@@ -16,7 +16,6 @@ $(function(){
       var me = this;
 
       $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
-        console.log("is authorized? : ", data);
 
         if (data.authorized) {
           me.set({screen_name: data.twitter_login});
@@ -36,10 +35,8 @@ $(function(){
             // from Twitter and the consumer secret
             $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
 
-              console.log(data);
 
               if (data.authorized) {
-                console.log("Authorized", data);
                 MapView.polygons.trigger("refresh");
                 me.set({screen_name: data.twitter_login});
 
@@ -51,10 +48,8 @@ $(function(){
           },
           signOut: function() {
             // We must destroy the session after the user has signed out
-            console.log("quitting");
             $.ajax({url:"signout", success:function(data) {
 
-              console.log("-", data);
 
               if (!data.authorized) {
 
@@ -67,7 +62,6 @@ $(function(){
                 $(".signout").hide();
               } else {
                 alert("There was an error signing you out");
-                console.log(data);
               }
             }});
           }
