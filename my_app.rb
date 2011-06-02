@@ -123,3 +123,10 @@ get '/get_polygons' do
   end
   return "Error"
 end
+
+get '/get_result' do
+    query = "SELECT twitter_login, ST_AsGeoJSON(the_geom) FROM #{options.table_name} WHERE twitter_login = 'cartodb';";
+    @cartodb = options.connection
+    result = @cartodb.query(query)
+    return result.to_json
+end

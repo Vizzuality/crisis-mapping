@@ -25,7 +25,7 @@ var Polygon = Backbone.Model.extend({
       path:[],
       strokeColor: color,
       strokeOpacity: 0.8,
-      strokeWeight: 1,
+      strokeWeight: 2,
       fillColor: color,
       fillOpacity: 0.4,
       map: this.map
@@ -36,7 +36,7 @@ var Polygon = Backbone.Model.extend({
       path:[],
       strokeColor: color,
       strokeOpacity: 0.8,
-      strokeWeight: 1,
+      strokeWeight: 2,
       map: this.map
     });
 
@@ -45,6 +45,7 @@ var Polygon = Backbone.Model.extend({
     });
   },
   draw: function() {
+    console.log(this.vertex);
     this.get("gpolygon").setPath(this.vertex);
   },
   reset: function() {

@@ -6,7 +6,7 @@
 
 $(function(){
 
-  var initialLocation = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+  var initialLocation = new google.maps.LatLng(18.5564014, -72.2540801);
 
   var Twitter = Backbone.Model.extend({
     initialize: function() {
@@ -170,6 +170,10 @@ $(function(){
     }
   };
 
+
+
+
+
   var App = Backbone.Controller.extend({
     appData: null,
     twitter:null,
@@ -203,6 +207,7 @@ $(function(){
     	   },
         disableDefaultUI: true
       };
+      MapResult.setup({model: this.appData});
       $("section.tools, section.tips, section.mamufas").hide();
     }
   });
