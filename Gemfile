@@ -1,5 +1,6 @@
 source :rubygems
 
+gem 'heroku'
 gem "sinatra"
 gem 'rspec-rails', '1.3.3'
 gem 'rack-test'
