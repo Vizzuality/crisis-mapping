@@ -1,4 +1,4 @@
-## How to install
+## How to install Crisis Mapping
 
 **Clone the repo**
 
@@ -12,10 +12,10 @@
 
     bundle install
 
-**Run the app**
+**Run the sinatra server**
 
     rackup
 
 **View the app**
 
-    open http://localhost:9292
+    Open a browser and visit http://localhost:9292
