@@ -97,7 +97,7 @@ var Polygons = Backbone.Collection.extend({
     this.map_ = options.map;
     this.create_polygon();
 
-    $(".remove").bind("click", function() {
+    $(".remove").bind("click", function(e) {
       e.preventDefault();
       e.stopProgagation();
       me.remove_polygon();
