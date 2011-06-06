@@ -2,20 +2,20 @@
 
 **Clone the repo**
 
-git clone git@github.com:Vizzuality/crisis-mapping.git
+    git clone git@github.com:Vizzuality/crisis-mapping.git
 
 **Install bundler**
 
-gem install bundler
+    gem install bundler
 
 **Install the gems**
 
-bundle install
+    bundle install
 
 **Run the app**
 
-rackup
+    rackup
 
 **View the app**
 
-open http://localhost:9292
+    open http://localhost:9292
