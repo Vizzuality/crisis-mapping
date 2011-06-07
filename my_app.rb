@@ -23,10 +23,12 @@ configure do
   set :SRID, 4326
 end
 
+@twitter_login = ""
+
 def is_authorized?(twitter_login = "")
 
   if ENV["RACK_ENV"] == "development"
-    session[:twitter_login] = "cartodb";
+    @twitter_login = "cartodb";
     return true
   end
 
@@ -41,7 +43,7 @@ def is_authorized?(twitter_login = "")
   user_id = cookie[0]
   secret  = cookie[1]
 
-  session[:twitter_login] = twitter_login unless twitter_login.nil? or twitter_login == ""
+  @twitter_login = twitter_login unless twitter_login.nil? or twitter_login == ""
 
   return false if user_id.nil? or secret.nil?
   # Let's check if the user is really who he/she is claiming to be or not
@@ -55,13 +57,12 @@ end
 
 post '/is_authorized' do
   content_type :json
-    is_authorized?(params[:twitter_login]) ? {:authorized => true, :twitter_login => session[:twitter_login]}.to_json : {:authorized => false}.to_json
+    is_authorized?(params[:twitter_login]) ? {:authorized => true, :twitter_login => @twitter_login}.to_json : {:authorized => false}.to_json
 end
 
 get '/signout' do
-  # We must get rid of the session and the cookie
   response.set_cookie("twitter_anywhere_identity", "")
-  session[:twitter_login] = nil
+  @twitter_login = ""
   puts "is_authorized: #{is_authorized?}"
   content_type :json
     is_authorized? ? {:authorized => true, :cookie => request.cookies["twitter_anywhere_identity"] }.to_json : {:authorized => false, :cookie =>request.cookies["twitter_anywhere_identity"] }.to_json
@@ -70,7 +71,8 @@ end
 post '/reset' do
   puts "Reset"
   if is_authorized?
-    query = "UPDATE #{options.table_name} SET the_geom = NULL WHERE twitter_login = '#{session[:twitter_login]}'"
+    twitter_login = params[:twitter_login]
+    query = "UPDATE #{options.table_name} SET the_geom = NULL WHERE twitter_login = '#{twitter_login}'"
     @cartodb = options.connection
     @cartodb.query(query)
     return "ok".to_json
@@ -81,7 +83,8 @@ end
 post '/setup_row' do
   puts "Setup row"
   if is_authorized?
-    query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{session[:twitter_login]}', NULL)"
+    twitter_login = params[:twitter_login]
+    query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{twitter_login}', NULL)"
     @cartodb = options.connection
     @cartodb.query(query)
     return "ok".to_json
@@ -89,21 +92,11 @@ post '/setup_row' do
   return "Error"
 end
 
-#post '/create' do
-#  puts "Create #{params[:coordinates]}"
-#  if is_authorized? and coordinates = params[:coordinates]
-#    query = "INSERT INTO #{options.table_name} (twitter_login, the_geom) VALUES ('#{session[:twitter_login]}', ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID}))"
-#    @cartodb = options.connection
-#    @cartodb.query(query)
-#    return "ok".to_json
-#  end
-#  return "Error"
-#end
-
 post '/update' do
-  puts "Update #{params[:coordinates]}"
+  puts "Update #{params[:coordinates]}, #{params[:twitter_login]}"
   if is_authorized? and coordinates = params[:coordinates]
-    query = "UPDATE #{options.table_name} SET the_geom = (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID})) WHERE twitter_login = '#{session[:twitter_login]}'"
+    twitter_login = params[:twitter_login]
+    query = "UPDATE #{options.table_name} SET the_geom = (ST_GeomFromText('MULTIPOLYGON(((#{coordinates})))', #{options.SRID})) WHERE twitter_login = '#{twitter_login}'"
     puts query
     @cartodb = options.connection
     @cartodb.query(query)
@@ -114,7 +107,8 @@ end
 
 get '/get_polygons' do
   if is_authorized?
-    query = "SELECT twitter_login, ST_AsGeoJSON(the_geom) FROM #{options.table_name} WHERE twitter_login = '#{session[:twitter_login]}';";
+    twitter_login = params[:twitter_login]
+    query = "SELECT twitter_login, ST_AsGeoJSON(the_geom) FROM #{options.table_name} WHERE twitter_login = '#{twitter_login}';";
     puts query
     @cartodb = options.connection
     result = @cartodb.query(query)

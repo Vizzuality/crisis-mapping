@@ -120,7 +120,7 @@ var Polygons = Backbone.Collection.extend({
   },
   remove_polygon: function() {
     var me = this;
-                      var found = false;
+    var found = false;
       this.map(function(polygon) {
         if (!found && me.current_polygon.get("gpolygon") === polygon.get("gpolygon")) {
 
@@ -186,7 +186,10 @@ var Polygons = Backbone.Collection.extend({
   draw: function() {
     var me = this;
 
-    $.get("/get_polygons", function(data) {
+    console.log("draw");
+    console.log(screen_name);
+
+    $.get("/get_polygons", {twitter_login: screen_name}, function(data) {
 
       if (data.rows.length > 0) {
 
@@ -218,16 +221,16 @@ var Polygons = Backbone.Collection.extend({
 
         });
       } else {
-        $.post("setup_row", function(data) { }, "json");
+        $.post("setup_row", {twitter_login:screen_name}, function(data) { }, "json");
       }
     }, "json");
   },
   empty_polygon: function() {
-    $.post("reset", function(data) { }, "json");
+    $.post("reset", {twitter_login:screen_name}, function(data) { }, "json");
   },
   store: function() {
     var coordinates = this.get_coordinates();
-    $.post("update", {coordinates:coordinates}, function(data) { }, "json");
+    $.post("update", {twitter_login: screen_name, coordinates:coordinates}, function(data) { }, "json");
   },
   get_coordinates: function() {
     var coordinates = [];
@@ -258,4 +261,5 @@ var Polygons = Backbone.Collection.extend({
     return coordinates.join(")),((");
   }
 });
+
 

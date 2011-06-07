@@ -4,41 +4,45 @@
 *
 */
 
+var screen_name = "";
+
 $(function(){
 
   var initialLocation = new google.maps.LatLng(18.553, -72.343);
 
   var Twitter = Backbone.Model.extend({
     initialize: function() {
-     //this.set({screen_name: "prueba"});
     },
     setup: function() {
       var me = this;
 
-      $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
+      twttr.anywhere(function (T) {
 
-        if (data.authorized) {
-          me.set({screen_name: data.twitter_login});
+        if (T.isConnected()) {
+          screen_name = T.currentUser.data('screen_name');
+          console.log("Already logged in: " + screen_name);
           $(".mamufas").fadeOut();
           $(".signout").show();
-          $(".signout").html(data.twitter_login + ", signout");
+          $(".signout").html(screen_name + ", signout");
+          MapView.setup({model: app.appData});
         }
-      });
 
-      twttr.anywhere(function (T) {
         T(".login").connectButton({
           authComplete: function(e, user) {
-            me.current_user = T.currentUser;
-            me.screen_name = me.current_user.data('screen_name');
+            me.screen_name = T.currentUser.data('screen_name');
 
             // We must authorize the user internally using the cookie
             // from Twitter and the consumer secret
             $.post("is_authorized", {twitter_login: me.screen_name}, function(data) {
 
-
               if (data.authorized) {
-                MapView.polygons.trigger("refresh");
-                me.set({screen_name: data.twitter_login});
+                me.set({screen_name: me.screen_name});
+                screen_name = me.screen_name;
+
+                console.log("Logged in: " + screen_name);
+
+                MapView.setup({model: app.appData});
+                //MapView.polygons.trigger("refresh");
 
                 $(".mamufas").fadeOut();
                 $(".signout").html(data.twitter_login + ", signout");
@@ -101,18 +105,18 @@ $(function(){
 
       var opts = {
         zoom: 19,
-            minZoom:13 ,
+        minZoom:13 ,
 
         center: this.model.get("location"),
-          mapTypeId: google.maps.MapTypeId.SATELLITE,
-          mapTypeControlOptions: {
-            mapTypeIds: ['Before','After'],
-            style: google.maps.NavigationControlStyle.SMALL,
-            position: google.maps.ControlPosition.TOP_CENTER
-    	   },
-         zoomControl:false,
-         scaleControl:false,
-         navigationControl: false
+        mapTypeId: google.maps.MapTypeId.SATELLITE,
+        mapTypeControlOptions: {
+          mapTypeIds: ['Before','After'],
+          style: google.maps.NavigationControlStyle.SMALL,
+          position: google.maps.ControlPosition.TOP_CENTER
+        },
+        zoomControl:false,
+        scaleControl:false,
+        navigationControl: false
 
       };
       this.map = new google.maps.Map(document.getElementById("map"), opts);
@@ -122,38 +126,38 @@ $(function(){
 
 
       var beforeOptions = {
-            getTileUrl: function(tile, zoom) {
-                var ymax = 1 << zoom;
-                var y = ymax - tile.y - 1;
-                return "http://mechanicalmapping2.s3.amazonaws.com/AOI1/before/" + zoom + "/" + tile.x + "/" + y + ".png";
-            },
-            tileSize: new google.maps.Size(256, 256),
-            opacity:1.0,
-            isPng: true,
-            maxZoom: 20,
-            name: "Before Earthquake"
-        };
+        getTileUrl: function(tile, zoom) {
+          var ymax = 1 << zoom;
+          var y = ymax - tile.y - 1;
+          return "http://mechanicalmapping2.s3.amazonaws.com/AOI1/before/" + zoom + "/" + tile.x + "/" + y + ".png";
+        },
+          tileSize: new google.maps.Size(256, 256),
+          opacity:1.0,
+          isPng: true,
+          maxZoom: 20,
+          name: "Before Earthquake"
+      };
 
 
-   /*
-         Initialisation of the layer After EarthQuake AOI1
-         */
-        var afterOptions = {
-            getTileUrl: function(tile, zoom) {
-                var ymax = 1 << zoom;
-                var y = ymax - tile.y - 1;
-                return "http://mechanicalmapping2.s3.amazonaws.com/AOI1/after/" + zoom + "/" + tile.x + "/" + y + ".jpg";
-            },
-            tileSize: new google.maps.Size(256, 256),
-            opacity:1.0,
-            isPng: false,
-            maxZoom: 20,
-            name: "After"
-        };
+/*
+Initialisation of the layer After EarthQuake AOI1
+*/
+      var afterOptions = {
+        getTileUrl: function(tile, zoom) {
+          var ymax = 1 << zoom;
+          var y = ymax - tile.y - 1;
+          return "http://mechanicalmapping2.s3.amazonaws.com/AOI1/after/" + zoom + "/" + tile.x + "/" + y + ".jpg";
+        },
+          tileSize: new google.maps.Size(256, 256),
+          opacity:1.0,
+          isPng: false,
+          maxZoom: 20,
+          name: "After"
+      };
 
-        // layers
-        this.map.mapTypes.set('Before', new google.maps.ImageMapType(beforeOptions));
-        this.map.mapTypes.set('After', new  google.maps.ImageMapType(afterOptions));
+      // layers
+      this.map.mapTypes.set('Before', new google.maps.ImageMapType(beforeOptions));
+      this.map.mapTypes.set('After', new  google.maps.ImageMapType(afterOptions));
 
 
 
@@ -230,8 +234,6 @@ $(function(){
     },
     index: function() {
       // display the current location
-      MapView.setup({model: this.appData});
-
       this.appData.set({"centered": true});
       this.twitter.setup();
     },
@@ -240,8 +242,8 @@ $(function(){
         zoom: 8,
         center: initialLocation,
         mapTypeControlOptions: {
-    	      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'cartodb']
-    	   },
+          mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'cartodb']
+        },
         disableDefaultUI: true
       };
       MapResult.setup({model: this.appData});
