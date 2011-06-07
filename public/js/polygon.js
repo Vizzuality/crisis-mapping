@@ -186,9 +186,6 @@ var Polygons = Backbone.Collection.extend({
   draw: function() {
     var me = this;
 
-    console.log("draw");
-    console.log(screen_name);
-
     $.get("/get_polygons", {twitter_login: screen_name}, function(data) {
 
       if (data.rows.length > 0) {

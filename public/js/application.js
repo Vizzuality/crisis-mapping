@@ -20,7 +20,6 @@ $(function(){
 
         if (T.isConnected()) {
           screen_name = T.currentUser.data('screen_name');
-          console.log("Already logged in: " + screen_name);
           $(".mamufas").fadeOut();
           $(".signout").show();
           $(".signout").html(screen_name + ", signout");
@@ -38,8 +37,6 @@ $(function(){
               if (data.authorized) {
                 me.set({screen_name: me.screen_name});
                 screen_name = me.screen_name;
-
-                console.log("Logged in: " + screen_name);
 
                 MapView.setup({model: app.appData});
                 //MapView.polygons.trigger("refresh");
