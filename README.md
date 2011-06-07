@@ -18,4 +18,4 @@
 
 **View the app**
 
-    Open a browser and visit http://localhost:9292
+Open a browser and visit http://localhost:9292.
